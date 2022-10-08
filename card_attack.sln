@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cardEngine", "cardEngine\cardEngine.csproj", "{CD76E905-7F29-436E-A36A-1E6CEB51D834}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cardVisual", "cardVisual\cardVisual.csproj", "{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD76E905-7F29-436E-A36A-1E6CEB51D834}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD76E905-7F29-436E-A36A-1E6CEB51D834}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD76E905-7F29-436E-A36A-1E6CEB51D834}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD76E905-7F29-436E-A36A-1E6CEB51D834}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+EndGlobal
