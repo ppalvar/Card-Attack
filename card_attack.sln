@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cardEngine", "cardEngine\ca
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cardVisual", "cardVisual\cardVisual.csproj", "{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cardAttackCLI", "cardAttackCLI\cardAttackCLI.csproj", "{81D909C7-A6BA-428B-AC53-1AC9B3F7428A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{C70B0081-6B2B-4801-BC0B-FEB3F2000EF4}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{81D909C7-A6BA-428B-AC53-1AC9B3F7428A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81D909C7-A6BA-428B-AC53-1AC9B3F7428A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81D909C7-A6BA-428B-AC53-1AC9B3F7428A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81D909C7-A6BA-428B-AC53-1AC9B3F7428A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

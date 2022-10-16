@@ -3,3 +3,9 @@
 .mono
 bin
 obj
+Images
+Fonts
+*.png
+*.import
+*.txt
+*.ttf
