@@ -2,6 +2,7 @@ namespace Cards;
 
 using System;
 using JsonItems;
+using Elements;
 
 /// <summary>
 /// Cartas de efecto: tienen un efecto directo sobre los monstruos(propios o no)
@@ -12,11 +13,11 @@ public class EffectCard : Card{
 
     Effect[]? Effects{get;set;}
 
-    public EffectCard(string Name, string Description, float AppearingProbability) : base(Name, Description, AppearingProbability){
+    public EffectCard(string Name, string Description, float AppearingProbability, string element) : base(Name, Description, AppearingProbability, element){
         //TODO
     }
 
-    public EffectCard(EffectCardItem args) : base(args.name, args.description, args.appearingProbability){
+    public EffectCard(EffectCardJsonItem args) : base(args.name, args.description, args.appearingProbability, args.element){
         //TODO
     }
 
