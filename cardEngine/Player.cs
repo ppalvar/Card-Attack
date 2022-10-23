@@ -1,21 +1,62 @@
-namespace Player;
+namespace Players;
 
 using System;
-using CardStores;
+using CardFactorys;
+using Cards;
 
-class Player{
-    public bool IsPlaying{get;set;}
-    private Deck? PlayerDeck{get;set;}
+public class Player{
+    public bool IsPlaying{get; private set;} = false;
+    public Deck? PlayerDeck{get;set;}
+    public Card[] Hand{get;private set;}
+    public Card[] Table{get;private set;}
 
-    public void Play(){
-        //TODO
+    public Player(int cardsInHand=5, int cardsInTable=5){
+        this.Hand = new Card[cardsInHand];
+        this.Table = new Card[cardsInTable];
+    }
+
+    public void Play(Card? card, ref Card? target){
+        if (card is EffectCard && target is MonsterCard){
+            //TODO
+        }
+        else if (card is MonsterCard
+                 && this.Table.Contains(target) 
+                 && !(target is MonsterCard) 
+                 && !(target is EffectCard)){
+            
+            target = card;
+
+            bool flag = true;
+
+            this.Hand = this.Hand.Where(val => {
+                if (val == card && flag){
+                    flag = false;
+                    return false;
+                }
+                return true;
+            }).ToArray();
+
+            if (this.PlayerDeck != null)
+                this.PlayerDeck.DeleteMonsterCard(card);
+        }
+        else {  
+            throw new ArgumentException("that movement can't be done");
+        }
     }
     
-    public void BeginTurn(){
+    public virtual void BeginTurn(){
+        #region Draw Cards
+        for (int i = 0; i < this.Hand.Length && this.PlayerDeck != null && this.PlayerDeck.DeckCards.Length > 0; i++){
+            if (!(this.Hand[i] is MonsterCard)){
+                this.Hand[i] = this.PlayerDeck.Draw();//TODO
+            }
+        }
+        #endregion
+        
         IsPlaying = true;
     }
 
-    public void EndTurn(){
+    public virtual void EndTurn(){
         IsPlaying = false;
     }
 }
