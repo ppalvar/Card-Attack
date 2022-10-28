@@ -61,7 +61,7 @@ public class Deck{
         else throw new NullReferenceException();
     }
 
-    public Card SummonMonster(){
+    public Card DrawMonster(){
         if (this.monsterCards != null)
             return GetCard(ref this.monsterCards);
         else throw new NullReferenceException();

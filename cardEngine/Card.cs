@@ -11,10 +11,7 @@ public abstract class Card{
     public string Description{get;set;}
     public float  AppearingProbability{get;set;}
     public Element element{get;set;}
-
-    public abstract void Play();
-    public abstract void Drop();
-
+    
     protected Card(string Name, string Description, float  AppearingProbability, string element){
         this.Name = Name;
         this.Description = Description;

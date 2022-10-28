@@ -48,14 +48,17 @@ public class MonsterCardJsonItem : CardJsonItem{
 /// Elemento especializado para guardar una carta de efecto
 /// </summary>
 public class EffectCardJsonItem : CardJsonItem{
-    public int attack{ get; set; }
-    public int hp{ get; set; }
+    public string powerName{get;set;}
+    public string powerCondition{get;set;}
 
     public EffectCardJsonItem(string name,
                            string description, 
                            float appearingProbability,
-                           string element) : base(name, description, appearingProbability, element)
+                           string element,
+                           string powerName,
+                           string powerCondition) : base(name, description, appearingProbability, element)
     {
-        //TODO
+        this.powerCondition = powerCondition;
+        this.powerName = powerName;
     }
 }

@@ -15,23 +15,25 @@ public class CardFactory{
     private static int MaxCards{get;set;}
     private static int MaxMonsterCards{get;set;}
 
-    public CardFactory(int maxCards=20, int maxMonsterCards=5){
+    public CardFactory(int maxEffectCards=20, int maxMonsterCards=5){
         LoadCardsFromDisk();
-        MaxCards = maxCards;
+        MaxCards = maxEffectCards + maxMonsterCards;
         MaxMonsterCards = maxMonsterCards;
     }
 
     public Card[] GetCardOptions(){
-        Card[] options = new Card[MaxCards];
+        List <Card> options = new List<Card>();
 
-        for (int i = 0; i < MaxMonsterCards && this.CardOptions != null; i++){
-            options[i] = this.CardOptions[nameof(MonsterCard)][i];
-        }
-        for (int i = MaxMonsterCards; i < MaxCards && this.CardOptions != null; i++){
-            options[i] = this.CardOptions[nameof(EffectCard)][i];
+        if (this.CardOptions != null) {
+            foreach (Card c in this.CardOptions[nameof(MonsterCard)]){
+                options.Add(c);
+            }
+            foreach (Card c in this.CardOptions[nameof(EffectCard)]){
+                options.Add(c);
+            }
         }
 
-        return options;
+        return options.ToArray();
     }
 
     public void CreateCard<T>(object? args){
@@ -53,7 +55,7 @@ public class CardFactory{
             EffectCard? m = args as EffectCard;
 
             if (m!= null){
-                EffectCardJsonItem tmp = new EffectCardJsonItem(m.Name, m.Description, m.AppearingProbability, m.element.Type);
+                EffectCardJsonItem tmp = new EffectCardJsonItem(m.Name, m.Description, m.AppearingProbability, m.element.Type, m.power.Name, m.power.Conditions);
                 if (EffectReader != null && EffectReader.Content != null){
                     EffectReader.Add(tmp);
                     if (this.CardOptions != null){
@@ -73,7 +75,7 @@ public class CardFactory{
         }
 
         for (int i = 0; i < MaxCards - MaxMonsterCards && CardOptions != null; i++){
-            cards[i] = GetRandomCard(CardOptions[nameof(MonsterCard)]);
+            cards[i] = GetRandomCard(CardOptions[nameof(EffectCard)]);
         }
 
         return new Deck(monsterCards, cards);
@@ -164,7 +166,6 @@ public class CardFactory{
 
         for (int i = 0; i < cards.Length; i++){
             if (randWeight <= weights[i]){
-                Console.WriteLine();
                 return cards[i];
             }
         }

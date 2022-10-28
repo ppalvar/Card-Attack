@@ -6,10 +6,6 @@ using IPowers;
 using Elements;
 
 /// <summary>
-/// Estructura que almacena las propiedades asociadas a los monstruos
-/// </summary>
-
-/// <summary>
 /// Cartas monstruo: estas se colocan en el campo
 /// y pueden atacar directamente los monstruos enemigos
 /// </summary>
@@ -22,6 +18,9 @@ public class MonsterCard : Card{
     private bool[] AssignedPowers{get;set;}
 
     const int MaxPowers = 3;
+
+    public bool IsAlive{get;private set;}
+    public bool IsDead{get{return !IsAlive;}private set {IsAlive = !value;}}
     #endregion
 
     public MonsterCard(string Name, string Description, float  AppearingProbability, int AttackPoints, int HP, string element) : base(Name, Description, AppearingProbability, element){
@@ -33,6 +32,7 @@ public class MonsterCard : Card{
 
         Powers = new IPower[MaxPowers];
         AssignedPowers = new bool[MaxPowers];
+        IsAlive = true;
     }
 
     public MonsterCard(MonsterCardJsonItem args) : base(args.name, args.description, args.appearingProbability, args.element){
@@ -42,18 +42,15 @@ public class MonsterCard : Card{
 
         Powers = new IPower[MaxPowers];
         AssignedPowers = new bool[MaxPowers];
-    }
-
-    public override void Play(){
-        //TODO
-    }
-
-    public override void Drop(){
-        //TODO
+        IsAlive = true;
     }
 
     public void Attack(ref MonsterCard target){
         target.HP = Math.Max(target.HP - this.AttackPoints, 0);
+
+        if (target.HP <= 0){
+            target.IsAlive = false;
+        }
     }
 
     public void AssignPower(IPower power){
@@ -70,5 +67,11 @@ public class MonsterCard : Card{
         }
 
         throw new Exception("the maximum number of powers has been reached");
+    }
+
+    public void UsePowerAt(int index) {
+        if (this.Powers[index] != null){
+            this.Powers[index].ApplyEffect();
+        }
     }
 }

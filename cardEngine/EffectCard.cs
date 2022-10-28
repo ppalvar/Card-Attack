@@ -3,29 +3,35 @@ namespace Cards;
 using System;
 using JsonItems;
 using Elements;
+using IPowers;
+using Powers;
 
 /// <summary>
 /// Cartas de efecto: tienen un efecto directo sobre los monstruos(propios o no)
 /// pero solo se activa una vez y no realizan ataques durante los turnos
 /// </summary>
 public class EffectCard : Card{
-    private delegate void Effect(Card target);
+    public IPower power{get;private set;}
 
-    Effect[]? Effects{get;set;}
-
-    public EffectCard(string Name, string Description, float AppearingProbability, string element) : base(Name, Description, AppearingProbability, element){
-        //TODO
+    public EffectCard(string Name, string Description, float AppearingProbability, string element, IPower power) : base(Name, Description, AppearingProbability, element){
+        this.power = power;
     }
 
     public EffectCard(EffectCardJsonItem args) : base(args.name, args.description, args.appearingProbability, args.element){
-        //TODO
+        IPower? tmp = PowersManager.GetPower(args.powerName, args.powerCondition);
+
+        if (tmp != null) this.power = tmp;
+
+        else {
+            throw new Exception("something happenned");
+        }
     }
 
-    public override void Play(){
-        //TODO
+    public void UseCard() {
+        //todo
     }
 
-    public override void Drop(){
-        //TODO
+    public void UseCard(ref MonsterCard target) {
+        target.AssignPower(this.power);
     }
 }
