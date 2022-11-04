@@ -12,7 +12,7 @@ public enum SYMBOLS {
     #endregion
 
     #region Comparators
-        LESS, GREAT, EQUAL, L_EQUAL, G_EQUAL,
+        LESS, GREAT, EQUAL, L_EQUAL, G_EQUAL, DIFF,
     #endregion
 
     #region Delimiters
@@ -73,7 +73,7 @@ public class Lexer {
     private int Position{get;set;}
     private char CurrentChar{get;set;}
 
-    private static Dictionary<string, Token> ReservedKeywords{get;} = new Dictionary<string, Token>{
+    public static Dictionary<string, Token> ReservedKeywords{get;} = new Dictionary<string, Token>{
         {"int" , new Token(SYMBOLS.INT, "int")},
         {"str" , new Token(SYMBOLS.STR, "str")},
         {"bool", new Token(SYMBOLS.BOOL, "bool")},
@@ -235,6 +235,11 @@ public class Lexer {
                     Advance(2);
                     return new Token(SYMBOLS.EQUAL, "==");
                 }
+
+                if (this.CurrentChar == '!' && Peek() == '=') {
+                    Advance(2);
+                    return new Token(SYMBOLS.DIFF, "!=");
+                }
             #endregion
 
             #region Identifiers
@@ -262,7 +267,7 @@ public class Lexer {
 
                 if (this.CurrentChar == '\'' || this.CurrentChar == '\"') {
                     string str = GetString();
-                    return new Token(SYMBOLS.STR, str);
+                    return new Token(SYMBOLS.STRING, str);
                 }
             #endregion
         }
@@ -315,6 +320,8 @@ public class Lexer {
                 str += CurrentChar;
                 Advance();
             }
+
+            Advance();
         }
 
         return str;

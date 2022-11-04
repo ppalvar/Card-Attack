@@ -162,3 +162,14 @@ public class WhileCicle : AST {
         this.Type = nameof(WhileCicle);
     }
 }
+
+public class String : AST {
+    public string Type{get;set;}
+    public Token Value{get;set;}
+
+    public String(Token value) {
+        this.Value = value;
+
+        this.Type = nameof(String);
+    }
+}

@@ -111,6 +111,11 @@ internal static class NodeVisitors {
                     int Right = (int) NodeVisitor.Visit(bNode.Right);
                     return Left >= Right;
                 }
+                if (bNode.Operator.Type == SYMBOLS.DIFF) {
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    return Left != Right;
+                }
             #endregion
         }
         return 0;
@@ -291,5 +296,14 @@ internal static class NodeVisitors {
             return result;
         }
         throw new Exception("error reading while-cicle");
+    }
+
+    public static object VisitString(AST? Node) {
+        if (Node != null) {
+            String sNode = (String) Node;
+            return sNode.Value.Content;
+        }
+
+        throw new Exception("couldn't read string");
     }
 }

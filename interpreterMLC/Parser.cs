@@ -2,6 +2,7 @@ namespace Parser;
 
 using System;
 using Lexer;
+using Symbols;
 
 public class Parser {
     private Token CurrentToken;
@@ -28,7 +29,7 @@ public class Parser {
         else if (token.Type == SYMBOLS.L_PAREN) {
             EAT(SYMBOLS.L_PAREN);
 
-            AST? Node = Expr();
+            AST? Node = Value();
 
             EAT(SYMBOLS.R_PAREN);
 
@@ -44,6 +45,17 @@ public class Parser {
                 EAT(SYMBOLS.MINUS);
                 return new UnaryOperator(token, Factor());
             }
+        }
+        else if (token.Type == SYMBOLS.TRUE || token.Type == SYMBOLS.FALSE) {
+            if (token.Type == SYMBOLS.TRUE)EAT(SYMBOLS.TRUE);
+            else EAT(SYMBOLS.FALSE);
+
+            return new Boolean(token);
+        }
+        else if (token.Type == SYMBOLS.STRING) {
+            EAT(SYMBOLS.STRING);
+
+            return new String(token);
         }
         else {
             return Variable();
@@ -91,19 +103,23 @@ public class Parser {
         return Node;
     }
 
-    public AST? Condition() {
-        /*
-             condition : conjuntion (OR conjuntion)*
-        */
-
-        Token token = this.CurrentToken;
-
-        AST? Node = Conjuntion();
+    public AST? Comp() {
+        AST? Node = Expr();
         
-        while (token.Type == SYMBOLS.OR) {
-            EAT(SYMBOLS.OR);
+        Token token = this.CurrentToken;
+        
+        while (token.Type == SYMBOLS.LESS || token.Type == SYMBOLS.GREAT ||
+               token.Type == SYMBOLS.L_EQUAL || token.Type == SYMBOLS.G_EQUAL ||
+               token.Type == SYMBOLS.EQUAL || token.Type == SYMBOLS.DIFF) {
             
-            Node = new BinaryOperator(Node, token, Conjuntion());
+            if (token.Type == SYMBOLS.EQUAL)EAT(SYMBOLS.EQUAL);
+            if (token.Type == SYMBOLS.LESS)EAT(SYMBOLS.LESS);
+            if (token.Type == SYMBOLS.GREAT)EAT(SYMBOLS.GREAT);
+            if (token.Type == SYMBOLS.L_EQUAL)EAT(SYMBOLS.L_EQUAL);
+            if (token.Type == SYMBOLS.G_EQUAL)EAT(SYMBOLS.G_EQUAL);
+            if (token.Type == SYMBOLS.DIFF)EAT(SYMBOLS.DIFF);
+            
+            Node = new BinaryOperator(Node, token, Expr());
 
             token = this.CurrentToken;
         }
@@ -111,94 +127,29 @@ public class Parser {
         return Node;
     }
 
-    public AST? Conjuntion() {
-        /*
-            conjuntion : bool (AND conjuntion)*
-        */
-        AST? Node = Bool();
+    public AST? Neg() {
         Token token = this.CurrentToken;
+
+        if (token.Type == SYMBOLS.NOT){
+            EAT(SYMBOLS.NOT);
+            return new UnaryOperator(token, Comp());
+        }
+
+        return Comp();
+    }
+
+    public AST? Conj() {
+        AST? Node = Neg();
+
+        Token token = CurrentToken;
 
         while (token.Type == SYMBOLS.AND) {
             EAT(SYMBOLS.AND);
-
-            Node = new BinaryOperator(Node, token, Bool());
-
-            token = this.CurrentToken;
+            Node = new BinaryOperator(Node, token, Neg());
+            token = CurrentToken;
         }
 
         return Node;
-    }
-
-    public AST? Bool() {
-        /*
-            bool : TRUE | FALSE
-                   | NOT condition
-                   | L_PAREN condition R_PAREN
-                   | comparison
-                   | variable
-        */
-
-        Token token = this.CurrentToken;
-
-        if (token.Type == SYMBOLS.L_PAREN) {
-            EAT(SYMBOLS.L_PAREN);
-            AST? Node = Condition();
-            EAT(SYMBOLS.R_PAREN);
-
-            return Node;
-        }
-
-        else if (token.Type == SYMBOLS.TRUE || token.Type == SYMBOLS.FALSE) {
-            if (token.Type == SYMBOLS.TRUE)
-                EAT(SYMBOLS.TRUE);
-            else 
-                EAT(SYMBOLS.FALSE);    
-            return new Boolean(token);
-        }
-
-        else if (token.Type == SYMBOLS.NOT) {
-            EAT(SYMBOLS.NOT);
-            return new UnaryOperator(token, Condition());
-        }
-
-        else if (token.Type == SYMBOLS.INTEGER || token.Type == SYMBOLS.ID){
-            return Comparison();
-        }
-
-        return null;
-    }
-
-    public AST? Comparison() {
-        /*
-            comparison : expr (( LESS | GREAT | EQUAL | L_EQUAL | G_EQUAL) expr)
-        */
-
-        AST? Left = Expr();
-
-        Token Comparator = this.CurrentToken;
-
-        if (Comparator.Type == SYMBOLS.LESS) {
-            EAT(SYMBOLS.LESS);
-        }
-        else if (Comparator.Type == SYMBOLS.GREAT) {
-            EAT(SYMBOLS.GREAT);
-        }
-        else if (Comparator.Type == SYMBOLS.EQUAL) {
-            EAT(SYMBOLS.EQUAL);
-        }
-        else if (Comparator.Type == SYMBOLS.L_EQUAL) {
-            EAT(SYMBOLS.L_EQUAL);
-        }
-        else if (Comparator.Type == SYMBOLS.G_EQUAL) {
-            EAT(SYMBOLS.G_EQUAL);
-        }
-        else {
-            return Left;
-        }
-
-        AST? Right = Expr();
-
-        return new BinaryOperator(Left, Comparator, Right);
     }
 
     public AST? Program() {
@@ -213,8 +164,6 @@ public class Parser {
 
         AST?[]? Nodes = StatementList();
 
-        EAT(SYMBOLS.R_BRACE);
-
         AST? Root = new Compound(Nodes);
 
         return Root;
@@ -227,8 +176,10 @@ public class Parser {
 
         Nodes.Add(Node);
 
-        while (this.CurrentToken.Type == SYMBOLS.SEMI) {
-            EAT(SYMBOLS.SEMI);
+        while (this.CurrentToken.Type == SYMBOLS.SEMI || this.CurrentToken.Type == SYMBOLS.R_BRACE) {
+            if (this.CurrentToken.Type == SYMBOLS.SEMI)EAT(SYMBOLS.SEMI);
+            else EAT(SYMBOLS.R_BRACE);
+
             Node = Statement();
 
             Nodes.Add(Node);
@@ -264,7 +215,7 @@ public class Parser {
         EAT(SYMBOLS.WHILE);
         EAT(SYMBOLS.L_PAREN);
 
-        AST? condition = Condition();
+        AST? condition = Value();
 
         EAT(SYMBOLS.R_PAREN);
 
@@ -277,7 +228,7 @@ public class Parser {
         EAT(SYMBOLS.IF);
         EAT(SYMBOLS.L_PAREN);
 
-        AST? condition = Condition();
+        AST? condition = Value();
 
         EAT(SYMBOLS.R_PAREN);
 
@@ -335,10 +286,44 @@ public class Parser {
 
         Token Op = this.CurrentToken;
         EAT(SYMBOLS.ASSIGN);
+        
+        if (Left != null) {
+            AST? val = Value();
+            return new Assign(Left, Op, val);
+        }
+        throw new Exception("couldn't parse var asignment");
+    }
 
-        AST? Right = Expr();
+    public AST? Value() {
+        AST? Node = Conj();
 
-        return new Assign(Left, Op, Right);
+        Token token = CurrentToken;
+        while (token.Type == SYMBOLS.OR) {
+            EAT(SYMBOLS.OR);
+            Node = new BinaryOperator(Node, token, Conj());
+            token = CurrentToken;
+        }        
+
+        return Node;
+    }
+
+    public AST? StrExpr() {
+        Token str1 = CurrentToken;
+        EAT(SYMBOLS.STRING);
+
+        AST? Node = new String(str1);
+
+        while (CurrentToken.Type == SYMBOLS.PLUS) {
+            Token op = CurrentToken;
+            EAT(SYMBOLS.PLUS);
+
+            AST? Right = new String(CurrentToken);
+            EAT(SYMBOLS.STRING);
+
+            Node = new BinaryOperator(Node, op, Right);
+        }
+
+        return Node;
     }
 
     public AST? Variable() {
