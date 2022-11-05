@@ -3,6 +3,35 @@ namespace Symbols;
 using System;
 using Lexer;
 
+public enum SYMBOLS {
+    #region Math symbols
+        PLUS, MINUS, MUL, DIV, MOD,
+    #endregion
+
+    #region Bool Operators
+        AND, OR, NOT, TRUE, FALSE,
+    #endregion
+
+    #region Comparators
+        LESS, GREAT, EQUAL, L_EQUAL, G_EQUAL, DIFF,
+    #endregion
+
+    #region Delimiters
+        SEMI, L_PAREN, R_PAREN, L_BRACE, R_BRACE, COMMA,
+    #endregion
+
+    #region Data types
+        INTEGER, STRING, BOOLEAN, OBJECT,
+    #endregion
+
+    #region Others
+        END, ID, ASSIGN,
+    #endregion
+
+    #region Reserved Keywords
+        INT, STR, BOOL, IF, ELSE, WHILE
+    #endregion
+}
 public abstract class ISymbol {
     public string Name{get;set;}
     public ISymbol? Type{get;set;}

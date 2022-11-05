@@ -46,9 +46,17 @@ internal static class NodeVisitors {
             BinaryOperator bNode = (BinaryOperator) Node;
             #region Math Operators
                 if (bNode.Operator.Type == SYMBOLS.PLUS) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
-                    return Left + Right;
+            
+                    object Left  = NodeVisitor.Visit(bNode.Left);
+                    object Right = NodeVisitor.Visit(bNode.Right);
+
+                    if (Left is string) {
+                        return (string)Left + (string)Right;
+                    }
+                    else if (Left is int) {
+                        return (int) Left + (int) Right;
+                    }
+
                 }
                 if (bNode.Operator.Type == SYMBOLS.MINUS) {
                     int Left  = (int) NodeVisitor.Visit(bNode.Left);
@@ -97,8 +105,8 @@ internal static class NodeVisitors {
                     return Left > Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.EQUAL) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    object Left  = NodeVisitor.Visit(bNode.Left);
+                    object Right = NodeVisitor.Visit(bNode.Right);
                     return Left == Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.L_EQUAL) {
@@ -112,8 +120,8 @@ internal static class NodeVisitors {
                     return Left >= Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.DIFF) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    object Left  = NodeVisitor.Visit(bNode.Left);
+                    object Right = NodeVisitor.Visit(bNode.Right);
                     return Left != Right;
                 }
             #endregion

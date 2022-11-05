@@ -1,72 +1,7 @@
 namespace Lexer;
 
 using System;
-
-public enum SYMBOLS {
-    #region Math symbols
-        PLUS, MINUS, MUL, DIV, MOD,
-    #endregion
-
-    #region Bool Operators
-        AND, OR, NOT, TRUE, FALSE,
-    #endregion
-
-    #region Comparators
-        LESS, GREAT, EQUAL, L_EQUAL, G_EQUAL, DIFF,
-    #endregion
-
-    #region Delimiters
-        SEMI, L_PAREN, R_PAREN, L_BRACE, R_BRACE, COMMA,
-    #endregion
-
-    #region Data types
-        INTEGER, STRING, BOOLEAN, OBJECT,
-    #endregion
-
-    #region Others
-        END, ID, ASSIGN,
-    #endregion
-
-    #region Reserved Keywords
-        INT, STR, BOOL, IF, ELSE, WHILE
-    #endregion
-}
-
-public class Token {
-    public SYMBOLS Type{get;private set;}
-    public string Content{get;private set;}
-
-    public Token (SYMBOLS Type, string Content){
-        this.Type = Type;
-        this.Content = Content;
-    }
-
-    #region Parsers
-        public int ToInt32() {
-            return int.Parse(this.Content);
-        }
-
-        public long ToInt64() {
-            return long.Parse(this.Content);
-        }
-
-        public float ToFloat() {
-            return float.Parse(this.Content);
-        }
-
-        public double ToDouble() {
-            return double.Parse(this.Content);
-        }
-
-        public bool AsBoolean() {
-            return this.Content == "True";
-        }
-
-        public object? AsObject() {
-            return new object();//todo: complete this
-        }
-    #endregion
-}
+using Symbols;
 
 public class Lexer {
     private string Text{get;set;}
@@ -171,7 +106,7 @@ public class Lexer {
                     return new Token(SYMBOLS.R_PAREN, ")");
                 }
 
-                if (this.CurrentChar == '!') {
+                if (this.CurrentChar == '!' && Peek() != '=') {
                     Advance();
                     return new Token(SYMBOLS.NOT, "!");
                 }

@@ -13,12 +13,21 @@ public class Parser {
         this.CurrentToken = this.Lexer.GetNextToken();
     }
 
+    public AST? Parse() {
+        AST? Node = Program();
+        Symbols.SymbolTable.InitBuiltins();
+
+        EAT(SYMBOLS.END);
+
+        return Node;
+    }
+
     private void EAT(SYMBOLS type) {
         if (this.CurrentToken.Type == type)this.CurrentToken = Lexer.GetNextToken();
         else throw new Exception($"unexpected \'{this.CurrentToken.Content}\' in input");
     }
 
-    public AST? Factor() {
+    private AST? Factor() {
         Token token = this.CurrentToken;
 
         if (token.Type == SYMBOLS.INTEGER) {
@@ -62,7 +71,7 @@ public class Parser {
         }
     }
 
-    public AST? Term() {
+    private AST? Term() {
         AST? Node = Factor();
         Token token = this.CurrentToken;
         
@@ -84,7 +93,7 @@ public class Parser {
         return Node;
     }
 
-    public AST? Expr() {
+    private AST? Expr() {
         AST? Node = Term();
         Token token = this.CurrentToken;
 
@@ -103,7 +112,7 @@ public class Parser {
         return Node;
     }
 
-    public AST? Comp() {
+    private AST? Comp() {
         AST? Node = Expr();
         
         Token token = this.CurrentToken;
@@ -127,7 +136,7 @@ public class Parser {
         return Node;
     }
 
-    public AST? Neg() {
+    private AST? Neg() {
         Token token = this.CurrentToken;
 
         if (token.Type == SYMBOLS.NOT){
@@ -138,7 +147,7 @@ public class Parser {
         return Comp();
     }
 
-    public AST? Conj() {
+    private AST? Conj() {
         AST? Node = Neg();
 
         Token token = CurrentToken;
@@ -152,14 +161,14 @@ public class Parser {
         return Node;
     }
 
-    public AST? Program() {
+    private AST? Program() {
         AST?[]? Node = StatementList();
         EAT(SYMBOLS.END);
 
         return new Compound( Node);
     }
 
-    public AST? CompoundStatement() {
+    private AST? CompoundStatement() {
         EAT(SYMBOLS.L_BRACE);
 
         AST?[]? Nodes = StatementList();
@@ -169,7 +178,7 @@ public class Parser {
         return Root;
     }
 
-    public AST?[] StatementList() {
+    private AST?[] StatementList() {
         List <AST?>? Nodes = new List<AST?>();
 
         AST? Node = Statement();
@@ -188,7 +197,7 @@ public class Parser {
         return Nodes.ToArray();
     }
 
-    public AST? Statement() {
+    private AST? Statement() {
         Token token = this.CurrentToken;
         AST? Node = null;
         
@@ -211,7 +220,7 @@ public class Parser {
         return Node;
     }
 
-    public AST? WhileStatement() {
+    private AST? WhileStatement() {
         EAT(SYMBOLS.WHILE);
         EAT(SYMBOLS.L_PAREN);
 
@@ -224,7 +233,7 @@ public class Parser {
         return new WhileCicle(condition, body);
     }
 
-    public AST? IfStatement() {
+    private AST? IfStatement() {
         EAT(SYMBOLS.IF);
         EAT(SYMBOLS.L_PAREN);
 
@@ -247,7 +256,7 @@ public class Parser {
         return new Conditional(condition, body, _else);
     }
 
-    public AST? VariableDeclaration() {
+    private AST? VariableDeclaration() {
         Token varType = CurrentToken;
 
         if (varType.Type == SYMBOLS.INT) {
@@ -281,7 +290,7 @@ public class Parser {
         return new VarDeclarationSet(vars.ToArray());
     }
 
-    public AST? AssignmentStatement() {
+    private AST? AssignmentStatement() {
         AST? Left = Variable();
 
         Token Op = this.CurrentToken;
@@ -294,7 +303,7 @@ public class Parser {
         throw new Exception("couldn't parse var asignment");
     }
 
-    public AST? Value() {
+    private AST? Value() {
         AST? Node = Conj();
 
         Token token = CurrentToken;
@@ -307,7 +316,7 @@ public class Parser {
         return Node;
     }
 
-    public AST? StrExpr() {
+    private AST? StrExpr() {
         Token str1 = CurrentToken;
         EAT(SYMBOLS.STRING);
 
@@ -326,7 +335,7 @@ public class Parser {
         return Node;
     }
 
-    public AST? Variable() {
+    private AST? Variable() {
         AST? Node = new Var(this.CurrentToken);
 
         EAT(SYMBOLS.ID);
@@ -334,16 +343,7 @@ public class Parser {
         return Node;
     }
 
-    public AST? Empty() {
+    private AST? Empty() {
         return new NoOperation();
-    }
-
-    public AST? Parse() {
-        AST? Node = Program();
-        Symbols.SymbolTable.InitBuiltins();
-
-        EAT(SYMBOLS.END);
-
-        return Node;
     }
 }
