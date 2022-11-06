@@ -17,7 +17,7 @@ public enum SYMBOLS {
     #endregion
 
     #region Delimiters
-        SEMI, L_PAREN, R_PAREN, L_BRACE, R_BRACE, COMMA,
+        SEMI, L_PAREN, R_PAREN, L_BRACE, R_BRACE, COMMA, DOT,
     #endregion
 
     #region Data types

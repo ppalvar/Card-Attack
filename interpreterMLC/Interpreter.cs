@@ -3,14 +3,18 @@ namespace Interpreter;
 using Parser;
 
 public class Interpreter {
-    private Parser Parser{get;set;}
+    private Parser? Parser{get;set;}
 
-    public Interpreter(string Text) {
+    public Interpreter() {}
+
+    public object Interpret(string Text, object Context) {
         this.Parser = new Parser(Text);
-    }
-
-    public object Interpret() {
         AST? Tree = Parser.Parse();
-        return NodeVisitor.Visit(Tree);
+        try {
+            return NodeVisitor.Visit(Tree, Context);
+        }
+        catch (Exception e) {
+            return new Exception(e.Message);
+        }
     }
 }

@@ -6,9 +6,9 @@ using Lexer;
 using Symbols;
 
 internal static class NodeVisitor {
-    private delegate object Visitor(AST? Node);
+    private delegate object Visitor(AST? Node,   object Context);
 
-    public static object Visit(AST? Node) {
+    public static object Visit(AST? Node,   object Context) {
         Assembly assembly = Assembly.GetExecutingAssembly();
         Type type = assembly.GetTypes().
                              Where(val => val.Name == nameof(NodeVisitors)).
@@ -18,7 +18,7 @@ internal static class NodeVisitor {
             MethodInfo? mf = type.GetMethod($"Visit{Node.Type}");
             if (mf != null){
                 Visitor visitor = mf.CreateDelegate<Visitor>();
-                return visitor(Node);
+                return visitor(Node,   Context);
             }
         }
 
@@ -41,14 +41,16 @@ internal static class NodeVisitors {
      * where Node is the name of the node you wanna visit
      */
 
-    public static object VisitBinaryOperator(AST? Node) {
+    private delegate void Callable(object obj);
+
+    public static object VisitBinaryOperator(AST? Node,   object Context) {
         if (Node != null) {
             BinaryOperator bNode = (BinaryOperator) Node;
             #region Math Operators
                 if (bNode.Operator.Type == SYMBOLS.PLUS) {
             
-                    object Left  = NodeVisitor.Visit(bNode.Left);
-                    object Right = NodeVisitor.Visit(bNode.Right);
+                    object Left  = NodeVisitor.Visit(bNode.Left,   Context);
+                    object Right = NodeVisitor.Visit(bNode.Right,   Context);
 
                     if (Left is string) {
                         return (string)Left + (string)Right;
@@ -59,69 +61,69 @@ internal static class NodeVisitors {
 
                 }
                 if (bNode.Operator.Type == SYMBOLS.MINUS) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left,   Context);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left - Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.MUL) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left,   Context);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left * Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.DIV) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left,   Context);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left / Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.MOD) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left,   Context);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left % Right;
                 }
             #endregion
             
             #region Boolean Operators
                 if (bNode.Operator.Type == SYMBOLS.OR) {
-                    bool Left  = (bool) NodeVisitor.Visit(bNode.Left);
-                    bool Right = (bool) NodeVisitor.Visit(bNode.Right);
+                    bool Left  = (bool) NodeVisitor.Visit(bNode.Left,   Context);
+                    bool Right = (bool) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left || Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.AND) {
-                    bool Left  = (bool) NodeVisitor.Visit(bNode.Left);
-                    bool Right = (bool) NodeVisitor.Visit(bNode.Right);
+                    bool Left  = (bool) NodeVisitor.Visit(bNode.Left,   Context);
+                    bool Right = (bool) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left && Right;
                 }
             #endregion
 
             #region Comparators
                 if (bNode.Operator.Type == SYMBOLS.LESS) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left,   Context);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left < Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.GREAT) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left,   Context);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left > Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.EQUAL) {
-                    object Left  = NodeVisitor.Visit(bNode.Left);
-                    object Right = NodeVisitor.Visit(bNode.Right);
-                    return Left == Right;
+                    object Left  = NodeVisitor.Visit(bNode.Left,   Context);
+                    object Right = NodeVisitor.Visit(bNode.Right,   Context);
+                    return Left.Equals(Right);
                 }
                 if (bNode.Operator.Type == SYMBOLS.L_EQUAL) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left,   Context);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left <= Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.G_EQUAL) {
-                    int Left  = (int) NodeVisitor.Visit(bNode.Left);
-                    int Right = (int) NodeVisitor.Visit(bNode.Right);
+                    int Left  = (int) NodeVisitor.Visit(bNode.Left,   Context);
+                    int Right = (int) NodeVisitor.Visit(bNode.Right,   Context);
                     return Left >= Right;
                 }
                 if (bNode.Operator.Type == SYMBOLS.DIFF) {
-                    object Left  = NodeVisitor.Visit(bNode.Left);
-                    object Right = NodeVisitor.Visit(bNode.Right);
+                    object Left  = NodeVisitor.Visit(bNode.Left,   Context);
+                    object Right = NodeVisitor.Visit(bNode.Right,   Context);
                     return Left != Right;
                 }
             #endregion
@@ -129,24 +131,24 @@ internal static class NodeVisitors {
         return 0;
     }
 
-    public static object VisitUnaryOperator(AST? Node) {
+    public static object VisitUnaryOperator(AST? Node,   object Context) {
         if (Node != null) {
             UnaryOperator uNode = (UnaryOperator) Node;
 
             #region Math Operators
                 if (uNode.Operator.Type == SYMBOLS.PLUS) {
-                    int Value = (int) NodeVisitor.Visit(uNode.Value);
+                    int Value = (int) NodeVisitor.Visit(uNode.Value,   Context);
                     return +Value;
                 }
                 if (uNode.Operator.Type == SYMBOLS.MINUS) {
-                    int Value = (int) NodeVisitor.Visit(uNode.Value);
+                    int Value = (int) NodeVisitor.Visit(uNode.Value,   Context);
                     return -Value;
                 }
             #endregion
 
             #region Bool Operators
                 if (uNode.Operator.Type == SYMBOLS.NOT) {
-                    bool Value = (bool) NodeVisitor.Visit(uNode.Value);
+                    bool Value = (bool) NodeVisitor.Visit(uNode.Value,   Context);
                     return !Value;
                 }
             #endregion
@@ -154,7 +156,7 @@ internal static class NodeVisitors {
         return 0;
     }
 
-    public static object VisitInteger(AST? Node) {
+    public static object VisitInteger(AST? Node,   object Context) {
         if (Node != null) {
             Integer iNode = (Integer) Node;
             return iNode.Value.ToInt32();
@@ -163,7 +165,7 @@ internal static class NodeVisitors {
         return 0;
     }
 
-    public static object VisitBoolean(AST? Node) {
+    public static object VisitBoolean(AST? Node,   object Context) {
         if (Node != null) {
             Boolean bNode = (Boolean) Node;
             return bNode.Value.AsBoolean();
@@ -172,13 +174,13 @@ internal static class NodeVisitors {
         return false;
     }
 
-    public static object VisitCompound(AST? Node) {
+    public static object VisitCompound(AST? Node,   object Context) {
         if (Node != null) {
             Compound cNode = (Compound) Node;
 
             if (cNode.Children != null)
             foreach (AST? node in cNode.Children) {
-                NodeVisitor.Visit(node);
+                NodeVisitor.Visit(node,   Context);
             }
 
             return new Object();
@@ -186,11 +188,11 @@ internal static class NodeVisitors {
         throw new Exception("error while parsing input");
     }
 
-    public static object VisitNoOperation(AST? Node) {
+    public static object VisitNoOperation(AST? Node,   object Context) {
         return new Object();
     } 
 
-    public static object VisitAssign(AST? Node) {
+    public static object VisitAssign(AST? Node,   object Context) {
         if (Node != null) {
             Assign aNode = (Assign) Node;
 
@@ -204,7 +206,7 @@ internal static class NodeVisitors {
                     throw new Exception($"cannot assign value to not declared var \'{varName}\'");
                 }
 
-                object Value = NodeVisitor.Visit(aNode.Right);
+                object Value = NodeVisitor.Visit(aNode.Right,   Context);
 
                 Scope.Global[v.Name] = Value;    
                 
@@ -215,7 +217,7 @@ internal static class NodeVisitors {
         throw new Exception("assignment cannot be done");
     }
 
-    public static object VisitVar(AST? Node) {
+    public static object VisitVar(AST? Node,   object Context) {
         if (Node != null) {
             Var vNode = (Var) Node;
 
@@ -235,13 +237,13 @@ internal static class NodeVisitors {
         throw new Exception("this variable does not exists");
     }
 
-    public static object VisitVarDeclarationSet(AST? Node) {
+    public static object VisitVarDeclarationSet(AST? Node,   object Context) {
         if (Node != null) {
             VarDeclarationSet vNode = (VarDeclarationSet) Node;
             
             if (vNode.Nodes != null) {
                 foreach (AST? subNode in vNode.Nodes) {
-                    NodeVisitor.Visit(subNode);
+                    NodeVisitor.Visit(subNode,   Context);
                 }
                 return 0;
             }
@@ -251,7 +253,7 @@ internal static class NodeVisitors {
         throw new Exception("couldn't create variable");
     }
 
-    public static object VisitVarDeclaration(AST? Node) {
+    public static object VisitVarDeclaration(AST? Node,   object Context) {
         if (Node != null) {
             VarDeclaration vNode = (VarDeclaration) Node;
             
@@ -273,17 +275,17 @@ internal static class NodeVisitors {
         throw new Exception("something happenned");
     }
 
-    public static object VisitConditional(AST? Node) {
+    public static object VisitConditional(AST? Node,   object Context) {
         if (Node != null) {
             Conditional cNode = (Conditional) Node;
 
-            bool validCondition = (bool) NodeVisitor.Visit(cNode.Condition);
+            bool validCondition = (bool) NodeVisitor.Visit(cNode.Condition,   Context);
 
             if (validCondition) {
-                return NodeVisitor.Visit(cNode.Body);
+                return NodeVisitor.Visit(cNode.Body,   Context);
             }
             else if (cNode.Else != null){
-                return NodeVisitor.Visit(cNode.Else);
+                return NodeVisitor.Visit(cNode.Else,   Context);
             }
 
             return new Object();
@@ -291,14 +293,14 @@ internal static class NodeVisitors {
         throw new Exception("error reading conditional");
     }
 
-    public static object VisitWhileCicle(AST? Node) {
+    public static object VisitWhileCicle(AST? Node,   object Context) {
         if (Node != null) {
             WhileCicle cNode = (WhileCicle) Node;
 
             object result = new Object();
 
-            while ((bool) NodeVisitor.Visit(cNode.Condition)) {
-                result = NodeVisitor.Visit(cNode.Body);
+            while ((bool) NodeVisitor.Visit(cNode.Condition,   Context)) {
+                result = NodeVisitor.Visit(cNode.Body,   Context);
             }
 
             return result;
@@ -306,7 +308,7 @@ internal static class NodeVisitors {
         throw new Exception("error reading while-cicle");
     }
 
-    public static object VisitString(AST? Node) {
+    public static object VisitString(AST? Node,   object Context) {
         if (Node != null) {
             String sNode = (String) Node;
             return sNode.Value.Content;
@@ -314,4 +316,51 @@ internal static class NodeVisitors {
 
         throw new Exception("couldn't read string");
     }
+
+    public static object VisitMethod(AST? Node,   object Context) {
+        if (Node != null) {
+            Method mNode = (Method) Node;
+
+            string Name = mNode.Name.Content;
+
+            Type type = Context.GetType();
+            PropertyInfo? pf = type.GetProperty(Name);
+            if (pf != null){
+                object? val = pf.GetValue(Context);
+                if (mNode.Props != null){
+                    if (val != null)
+                        return NodeVisitor.Visit(mNode.Props,   val);
+                }
+                else {
+                    return val != null ? val : "null";
+                }
+            }
+
+            MethodInfo? mf = type.GetMethod(Name);
+            if (mf != null) {
+                Callable methodCall = mf.CreateDelegate<Callable>(Context);
+
+                return methodCall;
+            }
+        }
+
+        throw new Exception("couldn't resolve this property");
+    }
+
+    public static object VisitMethodCall(AST? Node,   object Context) {
+        if (Node != null) {
+            MethodCall mNode = (MethodCall) Node;
+
+            object param = NodeVisitor.Visit(mNode.Param, Context);
+            Callable methodCall = (Callable) NodeVisitor.Visit(mNode.Method, Context);
+
+            methodCall(param);
+
+            return new Object();
+        }
+
+        throw new Exception("couldn't call the method");
+    }
+
+
 }

@@ -66,9 +66,13 @@ public class Parser {
 
             return new String(token);
         }
-        else {
+        else if (token.Type == SYMBOLS.OBJECT) {
+            return _Object();
+        }
+        else if (token.Type == SYMBOLS.ID){
             return Variable();
         }
+        else return Empty();
     }
 
     private AST? Term() {
@@ -213,6 +217,9 @@ public class Parser {
         else if (token.Type == SYMBOLS.WHILE) {
             Node = WhileStatement();
         }
+        else if (token.Type == SYMBOLS.OBJECT) {
+            Node = Call();
+        }
         else {
             Node = Empty();
         }
@@ -345,5 +352,32 @@ public class Parser {
 
     private AST? Empty() {
         return new NoOperation();
+    }
+
+    private AST? _Object() {
+        Token Name = CurrentToken;
+        
+        if (Name.Type == SYMBOLS.OBJECT)EAT(SYMBOLS.OBJECT);
+        if (Name.Type == SYMBOLS.ID)EAT(SYMBOLS.ID);
+
+        AST? Node = new Method(Name);
+
+        if (CurrentToken.Type == SYMBOLS.DOT) {
+            EAT(SYMBOLS.DOT);
+
+            Node = new Method(Name, _Object());        
+        }
+
+        return Node;
+    }
+
+    private AST? Call() {
+        AST? method = _Object();
+
+        EAT(SYMBOLS.L_PAREN);
+        AST? param = Value();
+        EAT(SYMBOLS.R_PAREN);
+
+        return new MethodCall(method, param);
     }
 }

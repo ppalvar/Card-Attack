@@ -173,3 +173,31 @@ public class String : AST {
         this.Type = nameof(String);
     }
 }
+
+public class Method : AST {
+    public string Type{get;set;}
+
+    public Token Name{get;set;}
+    public AST? Props{get;set;}
+
+    public Method(Token Name, AST? Props=null) {
+        this.Name = Name;
+        this.Props = Props;
+
+        this.Type = nameof(Method);
+    }
+}
+
+public class MethodCall : AST {
+    public string Type{get;set;}
+
+    public AST? Method{get;set;}
+    public AST? Param{get;set;}
+
+    public MethodCall(AST? Method, AST? Param) {
+        this.Method = Method;
+        this.Param = Param;
+
+        this.Type = nameof(MethodCall);
+    }
+}
