@@ -8,6 +8,8 @@ public class Parser {
     private Token CurrentToken;
     private Lexer Lexer;
 
+    private bool wasCompound = false;
+
     public Parser(string Text) {
         this.Lexer = new Lexer(Text);
         this.CurrentToken = this.Lexer.GetNextToken();
@@ -69,10 +71,9 @@ public class Parser {
         else if (token.Type == SYMBOLS.OBJECT) {
             return _Object();
         }
-        else if (token.Type == SYMBOLS.ID){
+        else {
             return Variable();
         }
-        else return Empty();
     }
 
     private AST? Term() {
@@ -179,6 +180,10 @@ public class Parser {
 
         AST? Root = new Compound(Nodes);
 
+        EAT(SYMBOLS.R_BRACE);
+
+        this.wasCompound = true;
+
         return Root;
     }
 
@@ -189,9 +194,10 @@ public class Parser {
 
         Nodes.Add(Node);
 
-        while (this.CurrentToken.Type == SYMBOLS.SEMI || this.CurrentToken.Type == SYMBOLS.R_BRACE) {
-            if (this.CurrentToken.Type == SYMBOLS.SEMI)EAT(SYMBOLS.SEMI);
-            else EAT(SYMBOLS.R_BRACE);
+        while (this.CurrentToken.Type == SYMBOLS.SEMI || wasCompound) {
+            if (!wasCompound)EAT(SYMBOLS.SEMI);
+
+            wasCompound = false;
 
             Node = Statement();
 
