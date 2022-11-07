@@ -45,7 +45,7 @@ public class MonsterCard : Card{
         IsAlive = true;
     }
 
-    public void Attack(ref MonsterCard target){
+    public void Attack(MonsterCard target){
         target.HP = Math.Max(target.HP - this.AttackPoints, 0);
 
         if (target.HP <= 0){
@@ -74,4 +74,29 @@ public class MonsterCard : Card{
             this.Powers[index].ApplyEffect();
         }
     }
+
+    /**
+        This methods MUST have the format :
+            private object MethodName(object param);
+        
+        they are used to modify the game state with code written in 
+        the MLC language, defined in ../interpreterMLC/Interpreter.cs
+    **/
+    #region State modifiers
+        private object IncreaseHP(object amount) {
+            this.HP += (int)amount;
+            if (this.HP <= 0)this.IsAlive = false;
+
+            return this.HP;
+        }
+
+        private void IncreaseAttack(object amount) {
+            this.AttackPoints += (int)amount;
+        }
+
+        private object Kill(object live) {
+            this.IsAlive = (bool) live;
+            return live;
+        }
+    #endregion
 }
