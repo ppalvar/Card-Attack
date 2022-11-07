@@ -69,7 +69,7 @@ public class Parser {
             return new String(token);
         }
         else if (token.Type == SYMBOLS.OBJECT) {
-            return _Object();
+            return Prop();
         }
         else {
             return Variable();
@@ -224,7 +224,7 @@ public class Parser {
             Node = WhileStatement();
         }
         else if (token.Type == SYMBOLS.OBJECT) {
-            Node = Call();
+            Node = Prop();
         }
         else {
             Node = Empty();
@@ -360,30 +360,34 @@ public class Parser {
         return new NoOperation();
     }
 
-    private AST? _Object() {
-        Token Name = CurrentToken;
+    private AST? Prop() {
+        Token token = CurrentToken;
+
+        if (token.Type == SYMBOLS.OBJECT)
+            EAT(SYMBOLS.OBJECT);
+        if (token.Type == SYMBOLS.ID)
+            EAT(SYMBOLS.ID);
         
-        if (Name.Type == SYMBOLS.OBJECT)EAT(SYMBOLS.OBJECT);
-        if (Name.Type == SYMBOLS.ID)EAT(SYMBOLS.ID);
+        if (CurrentToken.Type == SYMBOLS.L_PAREN) {
+            EAT(SYMBOLS.L_PAREN);
 
-        AST? Node = new Method(Name);
+            AST? param = Value();
+            
+            EAT(SYMBOLS.R_PAREN);
 
-        if (CurrentToken.Type == SYMBOLS.DOT) {
-            EAT(SYMBOLS.DOT);
-
-            Node = new Method(Name, _Object());        
+            if (CurrentToken.Type == SYMBOLS.DOT) {
+                EAT(SYMBOLS.DOT);
+                return new MethodCall(token, param, Prop());
+            }
+            return new MethodCall(token, param); 
         }
 
-        return Node;
-    }
+        if (CurrentToken.Type == SYMBOLS.L_PAREN) {
+            EAT(SYMBOLS.DOT);
 
-    private AST? Call() {
-        AST? method = _Object();
+            return new Method(token, Prop());
+        }
 
-        EAT(SYMBOLS.L_PAREN);
-        AST? param = Value();
-        EAT(SYMBOLS.R_PAREN);
-
-        return new MethodCall(method, param);
+        return new Method(token);
     }
 }

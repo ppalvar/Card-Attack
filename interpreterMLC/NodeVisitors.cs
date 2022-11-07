@@ -41,7 +41,7 @@ internal static class NodeVisitors {
      * where Node is the name of the node you wanna visit
      */
 
-    private delegate void Callable(object obj);
+    private delegate object Callable(object obj);
 
     public static object VisitBinaryOperator(AST? Node,   object Context) {
         if (Node != null) {
@@ -329,18 +329,11 @@ internal static class NodeVisitors {
                 object? val = pf.GetValue(Context);
                 if (mNode.Props != null){
                     if (val != null)
-                        return NodeVisitor.Visit(mNode.Props,   val);
+                        return NodeVisitor.Visit(mNode.Props, val);
                 }
                 else {
                     return val != null ? val : "null";
                 }
-            }
-
-            MethodInfo? mf = type.GetMethod(Name);
-            if (mf != null) {
-                Callable methodCall = mf.CreateDelegate<Callable>(Context);
-
-                return methodCall;
             }
         }
 
@@ -351,16 +344,24 @@ internal static class NodeVisitors {
         if (Node != null) {
             MethodCall mNode = (MethodCall) Node;
 
+            string name = mNode.Method.Content;
             object param = NodeVisitor.Visit(mNode.Param, Context);
-            Callable methodCall = (Callable) NodeVisitor.Visit(mNode.Method, Context);
 
-            methodCall(param);
+            Type type = Context.GetType();
+            
+            MethodInfo? mf = type.GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);
+            if (mf != null) {
+                Callable methodCall = mf.CreateDelegate<Callable>(Context);
 
-            return new Object();
+                if (mNode.Props != null) {
+                    return NodeVisitor.Visit(mNode.Props, methodCall(param));
+                }
+
+                return methodCall(param);
+            }
+
         }
 
         throw new Exception("couldn't call the method");
     }
-
-
 }

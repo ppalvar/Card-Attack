@@ -191,12 +191,15 @@ public class Method : AST {
 public class MethodCall : AST {
     public string Type{get;set;}
 
-    public AST? Method{get;set;}
+    public Token Method{get;set;}
     public AST? Param{get;set;}
 
-    public MethodCall(AST? Method, AST? Param) {
+    public AST? Props{get;set;}
+
+    public MethodCall(Token Method, AST? Param, AST? Props=null) {
         this.Method = Method;
         this.Param = Param;
+        this.Props = Props;
 
         this.Type = nameof(MethodCall);
     }
