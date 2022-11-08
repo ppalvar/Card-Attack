@@ -8,6 +8,9 @@ public class Interpreter {
     public Interpreter() {}
 
     public object Interpret(string Text, object Context) {
+        Symbols.SymbolTable.InitBuiltins();
+        Symbols.Scope.Clear();
+
         this.Parser = new Parser(Text);
         AST? Tree = Parser.Parse();
         try {

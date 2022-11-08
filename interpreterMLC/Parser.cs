@@ -17,7 +17,6 @@ public class Parser {
 
     public AST? Parse() {
         AST? Node = Program();
-        Symbols.SymbolTable.InitBuiltins();
 
         EAT(SYMBOLS.END);
 

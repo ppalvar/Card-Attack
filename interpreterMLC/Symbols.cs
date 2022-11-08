@@ -47,6 +47,10 @@ public abstract class ISymbol {
 
 public static class Scope {
     public static Dictionary <string, object> Global = new Dictionary<string, object>();
+
+    public static void Clear() {
+        Global.Clear();
+    }
 }
 
 public class BuiltinDataType : ISymbol {
@@ -81,6 +85,7 @@ public static class SymbolTable {
     }
 
     public static void InitBuiltins() {
+        Table.Clear();
         Define(new BuiltinDataType("int"));
         Define(new BuiltinDataType("bool"));
         Define(new BuiltinDataType("str"));

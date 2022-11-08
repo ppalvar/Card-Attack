@@ -32,8 +32,8 @@ public class Token {
             return this.Content == "True";
         }
 
-        public object? AsObject() {
-            return new object();//todo: complete this
+        public object AsObject() {
+            return (object) Content;
         }
     #endregion
 }
