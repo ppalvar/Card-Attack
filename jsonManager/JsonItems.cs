@@ -25,7 +25,7 @@ public abstract class CardJsonItem{
 }
 
 /// <summary>
-/// Elemento especializado para guardar una carta de monstruo
+/// Json Item Used to store a Monster Card in disk
 /// </summary>
 public class MonsterCardJsonItem : CardJsonItem{
     public int attack{ get; set; }
@@ -45,20 +45,26 @@ public class MonsterCardJsonItem : CardJsonItem{
 
 
 /// <summary>
-/// Elemento especializado para guardar una carta de efecto
+/// Json Item used to store an Effect Card in disk
 /// </summary>
 public class EffectCardJsonItem : CardJsonItem{
     public string powerName{get;set;}
-    public string powerCondition{get;set;}
+    public string powerToMatch{get;set;}
+    public string powerToTarget{get;set;}
+    public string powerToThis{get;set;}
 
     public EffectCardJsonItem(string name,
                            string description, 
                            float appearingProbability,
                            string element,
                            string powerName,
-                           string powerCondition) : base(name, description, appearingProbability, element)
+                           string PowerToMatch,
+                           string PowerToTarget,
+                           string PowerToThis) : base(name, description, appearingProbability, element)
     {
-        this.powerCondition = powerCondition;
         this.powerName = powerName;
+        this.powerToMatch = PowerToMatch;
+        this.powerToTarget = PowerToMatch;
+        this.powerToThis = PowerToThis;
     }
 }
