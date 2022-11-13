@@ -1,0 +1,38 @@
+﻿@page
+@model MyApp.Namespace.NewMonsterModel
+@{
+}
+
+<link rel="stylesheet" href="/css/new-card.css">
+<script src="/js/new-card.js"></script>
+<script src="/js/new-monster.js"></script>
+
+<div class="d-flex justify-content-end btn-container">
+    <button class="btn btn-warning" id="create-btn">Create</button>
+</div>
+
+<div id="photo-slider" class="d-flex justify-content-evenly photo-slider">
+    <input id="prev-img" type="image" src="/img/arrow-left.svg" alt="prev" class="arrow-btn">
+
+    <img src="/img/card_0.png" alt="card" class="img-frame img-frame-fade" id="img-frame-prev">
+    <img src="/img/card_1.png" alt="card" class="img-frame" id="img-frame">
+    <img src="/img/card_2.png" alt="card" class="img-frame img-frame-fade" id="img-frame-next">
+    
+    <input id="next-img" type="image" src="/img/arrow-right.svg" alt="next" class="arrow-btn">
+</div>
+
+<div class="d-flex justify-content-evenly photo-slider">
+    <input type="text" name="card-name" id="card-name" class="form-control gap" placeholder="Card Name">
+    <select name="card-element" id="card-element" class="form-control gap">
+        <option value="Fire">Fire</option>
+        <option value="Water">Water</option>
+        <option value="Earth">Earth</option>
+        <option value="Wind">Wind</option>
+    </select>
+    <input type="text" name="card-probability" id="card-probability" class="form-control gap" placeholder="Appearing Probability">
+</div>
+
+<div class="d-flex justify-content-evenly photo-slider">
+    <input type="text" name="monster-hp" id="monster-hp" class="form-control gap" placeholder="Monster HP">
+    <input type="text" name="monster-attack" id="monster-attack" class="form-control gap" placeholder="Monster Attack Points">
+</div>

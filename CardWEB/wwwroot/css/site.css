@@ -1,0 +1,8 @@
+body {
+  min-height: max-content;
+  max-height: min-content;
+  background-image: url('/img/background.jpg');
+  background-size: cover;
+  background-color: rgba(119, 114, 105, 0.566);
+  overflow:hidden;
+}

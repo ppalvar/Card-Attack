@@ -1,0 +1,50 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Start";
+}
+
+<link rel="stylesheet" href="css/index.css">
+
+<h1 class="game-title">Card Attack!</h1>
+
+<a href="/table">
+    <div id="start-btn" class="start-btn d-flex justify-content-center">
+        <img src="img/play.svg" alt="Play" class="start-btn-img">
+    </div>
+</a>
+
+<div class="stick-bottom">
+    <div class="d-flex justify-content-center" >
+        <h2 class="create-card-btn">Select Deck</h2>
+    </div>
+    <div class="d-flex justify-content-center" data-bs-toggle="modal" data-bs-target="#create-card-modal">
+        <h2 class="create-card-btn">New Card</h2>
+    </div>
+</div>
+
+
+<div class="modal fade" id="create-card-modal">
+    <div class="modal-dialog ">
+        <div class="modal-content back-fade">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-center text-warning">Which type of card you wanna create?</h4>
+                <button type="button" class="btn-close bg-warning" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <a href="/newMonster/">
+                    <div class="d-flex justify-content-center" >
+                        <h2 class="card-option-btn">Monster card</h2>
+                    </div>
+                </a>
+                <a href="/newEffect/">
+                    <div class="d-flex justify-content-center" >
+                        <h2 class="card-option-btn">Effect card</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

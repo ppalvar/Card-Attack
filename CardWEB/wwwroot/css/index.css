@@ -1,0 +1,85 @@
+.start-btn {
+    margin: 0;
+    min-height: 10em;
+}
+
+.start-btn-img {
+    height: 8em;
+    width: 8em;
+
+    animation:start-btn-animation 500ms infinite alternate;
+    transition: 250ms;
+}
+
+@keyframes start-btn-animation {
+    from {
+        height: 8em;
+        width: 8em;
+    }
+    to {
+        height: 9em;
+        width: 9em;
+    }
+}
+
+@font-face {
+    font-family: 'BlackBox';
+    src: url('/fonts/black_box.ttf');
+}
+
+.game-title {
+    text-align: center;
+    font-family: 'BlackBox';
+    font-size: 6em;
+    text-shadow: 2px 2px black;
+    color: rgb(56, 179, 90);
+}
+
+.create-card-btn {
+    background-color: rgb(56, 179, 90);
+    font-family: 'BlackBox';
+    font-size: 3em;
+    text-shadow: 2px 2px black;
+    color: rgb(213, 210, 210);
+    text-align: center;
+    border-radius: 1em;
+    border: solid rgb(30, 29, 29) 2px;
+    width: 8em;
+    padding: 10px 0;
+
+    transition: transform 250ms;
+}
+
+.create-card-btn:hover {
+    transform: scale(1.1, 1.1);
+}
+ 
+.stick-bottom {
+    width: 100%;
+    position: absolute;
+    bottom: 3em;
+}
+
+.back-fade {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+}
+
+.card-option-btn {
+    font-size: 1.5em;
+    background-color: rgb(56, 179, 90);
+    font-family: 'BlackBox';
+    text-shadow: 2px 2px black;
+    color: rgb(213, 210, 210);
+    text-align: center;
+    border-radius: 3em;
+    border: solid rgb(30, 29, 29) 2px;
+    width: 10em;
+    padding: 10px 0;
+
+    transition: transform 250ms;
+}
+
+.card-option-btn:hover {
+    transform: scale(1.1,1.1);
+}

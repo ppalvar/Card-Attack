@@ -1,0 +1,60 @@
+.arrow-btn {
+    height: 3em;
+    width: 3em;
+
+    background-color: rgba(184, 184, 66, 0.639);
+    border-radius: 4px;
+
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.arrow-btn:hover {
+    animation: fade-in 250ms;
+    animation-fill-mode: forwards;
+}
+
+.img-frame {
+    height: 10em;
+    width: 10em;
+
+    border-radius: 6px;
+    border: solid rgba(184, 184, 66, 0.639) 2px;
+}
+
+.img-frame-fade {
+    height: 9em;
+    width: 9em;
+    opacity: 0.5;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.photo-slider {
+    margin: 1em;
+}
+
+.gap {
+    margin: 2em;
+}
+
+.btn-container {
+    margin: 1em;
+}
+
+.editor {
+    display: block;
+    position: relative;
+    min-height: 200px;
+    height: 100%;
+    overflow: scroll;
+}
+
+@keyframes fade-in {
+    from {
+        background-color: rgba(184, 184, 66, 0.639);
+    }
+    to {
+        background-color: rgb(184, 184, 66);
+    }
+}
