@@ -4,49 +4,50 @@ using System;
 using CardFactorys;
 using Cards;
 
+/// <summary>
+/// A class for the human players
+/// </summary>
 public class Player{
     public bool IsPlaying{get; private set;} = false;
-    public Deck? PlayerDeck{get;set;}
-    public Card[]? Hand{get;private set;}
-    public MonsterCard[]? Table{get;private set;}
+    public Deck? PlayerDeck{get;private set;}
+
+    /// <summary>
+    /// The e
+    /// </summary>
+    /// <value></value>
+    public Card?[] Hand{get;private set;}
+    public MonsterCard?[] Table{get;private set;}
 
     public Player(int cardsInHand=5, int cardsInTable=5){
         this.Hand = new Card[cardsInHand];
         this.Table = new MonsterCard[cardsInTable];
     }
 
-    public void Play(Card card, ref MonsterCard? target){
+    public void Play(int _card, MonsterCard? target=null){
+        Card? card = this.Hand[_card];
+
         if (!this.IsPlaying){
             throw new Exception("you can't play now");
         }
 
-        if (card is EffectCard && target is MonsterCard && target != null){
-            EffectCard tmpCard = (EffectCard) card;
-            tmpCard.UseCard(ref target);
+        if (card is EffectCard eCard && target != null){
+            eCard.UseCard(target);
+
+            Hand[_card] = null;        
         }
-        else if (card is MonsterCard
-                 && this.Table != null
-                 && this.Hand != null
-                 && this.Table.Contains(target) 
-                 && !(target is MonsterCard))
+        else if (card is MonsterCard mCard && target == null)
         {
-
-            target = (MonsterCard) card;
-
-            bool flag = true;
-
-            this.Hand = this.Hand.Where(val => {
-                if (val == card && flag){
-                    flag = false;
-                    return false;
+            //remove the played card from the hand
+            Hand[_card] = null;
+            
+            for (int i = 0; i < this.Hand.Length; i++) {
+                if (this.Table[i] == null) {
+                    this.Table[i] = mCard;
+                    break;
                 }
-                return true;
-            }).ToArray();
-
-            if (this.PlayerDeck != null)
-                this.PlayerDeck.DeleteMonsterCard(card);
+            }
         }
-        else {  
+        else { 
             throw new ArgumentException("that movement can't be done");
         }
     }
@@ -54,8 +55,8 @@ public class Player{
     public virtual void BeginTurn(){
         #region Draw Cards
         for (int i = 0; this.Hand != null && i < this.Hand.Length && this.PlayerDeck != null && this.PlayerDeck.DeckCards.Length > 0; i++){
-            if (!(this.Hand[i] is MonsterCard)){
-                this.Hand[i] = this.PlayerDeck.Draw();//TODO
+            if (this.Hand[i] == null){
+                this.Hand[i] = this.PlayerDeck.Draw();
             }
         }
         #endregion
@@ -68,10 +69,59 @@ public class Player{
     }
 
     public void RemoveDeadMonsters() {
-        for (int i = 0; this.Table != null && i < this.Table.Length; i++) {
+        for (int i = 0; i < this.Table.Length; i++) {
             MonsterCard? tmp = this.Table[i] as MonsterCard;
-            Card[] tmpCard = new Card[1];//this line only avoids a NULL error
-            if (tmp != null && tmp.IsDead)this.Table[i] = (MonsterCard) tmpCard[0];
+            if (tmp != null && tmp.IsDead) {
+                this.Table[i] = null;
+            }
         }
     }
+
+    public bool HasNoMonsters() {
+        bool flag = false;
+
+        if (PlayerDeck != null) {
+            foreach (Card card in PlayerDeck.DeckCards) {
+                flag = flag | card is MonsterCard;
+            }
+        }
+        
+        return this.PlayerDeck != null && !flag;
+    }
+
+    public void SetDeck(Deck deck) {
+        if (this.PlayerDeck == null) {
+            this.PlayerDeck = deck;
+        }
+    }
+
+    /**
+        This methods MUST have the format :
+            protected object MethodName(object param);
+        
+        they are used to modify the game state with code written in 
+        the MLC language, defined in ../interpreterMLC/Interpreter.cs
+    **/
+    #region State modifiers
+        protected object EndTurn(object empty) {
+            EndTurn();
+            return empty;
+        }
+
+        protected object HandAt(object index) {
+             Card? monster = this.Hand[(int) index];
+            if (monster != null) {
+                return monster;
+            }
+            else return new Object();
+        }
+
+        protected object TableAt(object index) {
+            MonsterCard? monster = this.Table[(int) index];
+            if (monster != null) {
+                return monster;
+            }
+            else return new Object();
+        }
+    #endregion
 }

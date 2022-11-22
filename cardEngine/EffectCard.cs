@@ -2,8 +2,6 @@ namespace Cards;
 
 using System;
 using JsonItems;
-using Elements;
-using IPowers;
 using Powers;
 
 /// <summary>
@@ -11,14 +9,14 @@ using Powers;
 /// pero solo se activa una vez y no realizan ataques durante los turnos
 /// </summary>
 public class EffectCard : Card{
-    public IPower power{get;private set;}
+    public Power power{get;private set;}
 
-    public EffectCard(string Name, string Description, float AppearingProbability, string element, IPower power) : base(Name, Description, AppearingProbability, element){
+    public EffectCard(string Name, string Description, string Image, float AppearingProbability, string element, Power power) : base(Name, Description, Image, AppearingProbability, element){
         this.power = power;
     }
 
-    public EffectCard(EffectCardJsonItem args) : base(args.name, args.description, args.appearingProbability, args.element){
-        IPower? tmp = PowersManager.GetPower(args.powerName, args.powerCondition);
+    public EffectCard(EffectCardJsonItem args) : base(args.name, args.description, args.image, args.appearingProbability, args.element){
+        Power? tmp = new Power(args.powerName, args.powerCode);
 
         if (tmp != null) this.power = tmp;
 
@@ -27,11 +25,11 @@ public class EffectCard : Card{
         }
     }
 
-    public void UseCard() {
-        //todo
-    }
-
-    public void UseCard(ref MonsterCard target) {
+    /// <summary>
+    /// Aquips to a target monster the power holded by this card
+    /// </summary>
+    /// <param name="target">A MonsterCard</param>
+    public void UseCard(MonsterCard target) {
         target.AssignPower(this.power);
     }
 }

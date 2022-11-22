@@ -1,64 +1,44 @@
 namespace Powers;
 
-using IPowers;
-using Elements;
-using System.Reflection;
+using Match;
+using Cards;
+using Interpreter;
 
-public static class PowersManager {
-    static public Type[] allPowers{get;private set;} = GetPowers();
+public class Power {
+    public string Name{get;private set;}
 
-    public static IPower? GetPower(string Name, string Conditions) {
-        foreach (Type p in allPowers) {
-            if (p.Name == Name)return GetPower(p, Conditions);
-        }return null;
+    public string PowerCode{get;private set;}
+
+    /// <summary>
+    /// Constructor to Powers. All params are valid MLC code
+    /// that will be executed when:
+    /// </summary>
+    /// <param name="Name">The name of this power</param>
+    /// <param name="PowerToMatch">The monster uses this power (aplies to the match)</param>
+    /// <param name="PowerToTarget">The monster uses this power (aplies to the target card)</param>
+    /// <param name="PowerToThis">The monster uses this power (aplies to this card)</param>
+    public Power(string PowerName, string PowerCode) {
+        this.PowerCode = PowerCode;
+        this.Name = PowerName;
     }
 
-    public static IPower GetPower(Type power, string Conditions){
-        Object? g_power = Activator.CreateInstance(power, Conditions);
-        
-        if (g_power != null){
-            IPower? p = g_power as IPower;
-            if (p != null)return p;
-        }
+    public void UsePower(MonsterCard card, MonsterCard target, Match match) {
+        Interpreter interpreter = new Interpreter();
 
-        throw new Exception("can't create an instance of this power");
-    }
+        MatchState state = new MatchState(card, target, match);
 
-    private static Type[] GetPowers(){
-        Assembly assembly = Assembly.GetExecutingAssembly();
-
-        return assembly.GetTypes()
-               .Where(type => type.Namespace != null && "Powers" == type.Namespace.ToString())
-               .Where(name => !name.Name.Contains("PowersManager")).SkipLast(1).ToArray();
+        interpreter.Interpret(this.PowerCode, state);
     }
 }
 
-public class FireBall : IPower{
-    public Element Element{get;} = new Fire();
-    
-    public string Conditions{get;set;}
-    public string Name{get;set;}
+internal class MatchState {
+    MonsterCard me{get;set;}
+    MonsterCard target{get;set;}
+    Match match{get;set;}
 
-    public FireBall(string Conditions){
-        this.Conditions = Conditions;
-        this.Name = nameof(FireBall);
-    }
-    public void ApplyEffect(){
-        
-    }
-}
-
-public class Splash : IPower{
-    public Element Element{get;} = new Water();
-
-    public string Conditions{get;set;}
-    public string Name{get;set;}
-
-    public Splash(string Conditions){
-        this.Conditions = Conditions;
-        this.Name = nameof(Splash);
-    }
-    public void ApplyEffect(){
-        
+    public MatchState(MonsterCard me, MonsterCard target, Match match) {
+        this.me = me;
+        this.target = target;
+        this.match = match;
     }
 }

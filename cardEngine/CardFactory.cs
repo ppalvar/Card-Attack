@@ -7,20 +7,29 @@ using JsonRW;
 
 public class CardFactory{
     #region Readers
-    JsonRW<MonsterCardJsonItem>? MonsterReader;
-    JsonRW<EffectCardJsonItem>? EffectReader;
+        JsonRW<MonsterCardJsonItem>? MonsterReader;
+        JsonRW<EffectCardJsonItem>? EffectReader;
     #endregion
     
-    protected Dictionary<string, Card[]>? CardOptions{get;set;}
+    private Dictionary<string, Card[]>? CardOptions{get;set;}
     private static int MaxCards{get;set;}
     private static int MaxMonsterCards{get;set;}
 
+    /// <summary>
+    /// Creates a new instance of CardFactory
+    /// </summary>
+    /// <param name="maxEffectCards">The maximum amount of EffectCards the player will have</param>
+    /// <param name="maxMonsterCards">The maximum amount of EffectCards the player will have</param>
     public CardFactory(int maxEffectCards=20, int maxMonsterCards=5){
         LoadCardsFromDisk();
         MaxCards = maxEffectCards + maxMonsterCards;
         MaxMonsterCards = maxMonsterCards;
     }
 
+    /// <summary>
+    /// Gets all the available cards (those already created and added to the factory and files)
+    /// </summary>
+    /// <returns>An array containing all available cards</returns>
     public Card[] GetCardOptions(){
         List <Card> options = new List<Card>();
 
@@ -36,12 +45,17 @@ public class CardFactory{
         return options.ToArray();
     }
 
+    /// <summary>
+    /// Adds a new type of card to the factory and saves it to the disk
+    /// </summary>
+    /// <param name="args">A card, as an instance of Cards.MonsterCard or Cards.EffectCard</param>
+    /// <typeparam name="T">Either Cards.MonsterCard or Cards.EffectCard</typeparam>
     public void CreateCard<T>(object? args){
         if (typeof(T) == typeof(MonsterCard)){
             MonsterCard? m = args as MonsterCard;
 
             if (m!= null){
-                MonsterCardJsonItem tmp = new MonsterCardJsonItem(m.Name, m.Description, m.AppearingProbability,m.element.Type, m.AttackPoints, m.HP);
+                MonsterCardJsonItem tmp = new MonsterCardJsonItem(m.Name, m.Description, m.Image, m.AppearingProbability,m.element.Type, m.AttackPoints, m.HP);
                 if (MonsterReader != null && MonsterReader.Content != null){
                     MonsterReader.Add(tmp);
                     if (this.CardOptions != null){
@@ -55,7 +69,7 @@ public class CardFactory{
             EffectCard? m = args as EffectCard;
 
             if (m!= null){
-                EffectCardJsonItem tmp = new EffectCardJsonItem(m.Name, m.Description, m.AppearingProbability, m.element.Type, m.power.Name, m.power.Conditions);
+                EffectCardJsonItem tmp = new EffectCardJsonItem(m.Name, m.Description, m.Image, m.AppearingProbability, m.element.Type, m.power.Name, m.power.PowerCode);
                 if (EffectReader != null && EffectReader.Content != null){
                     EffectReader.Add(tmp);
                     if (this.CardOptions != null){
@@ -66,21 +80,50 @@ public class CardFactory{
         }
     }
 
+    public Deck GetDeck(string[] names) {
+        List <Card> cards = new List<Card>();
+
+        if (CardOptions != null) {
+            foreach (Card c in CardOptions[nameof(MonsterCard)]) {
+                if (names.Contains(c.Name)) {
+                    cards.Add(c);
+                }
+            }
+            foreach (Card c in CardOptions[nameof(EffectCard)]) {
+                if (names.Contains(c.Name)) {
+                    cards.Add(c);
+                }
+            }
+        }
+
+        return GetDeck(cards.ToArray());
+    }
+
+    /// <summary>
+    /// Gets a random Deck, using the appearing probability
+    /// of each card
+    /// </summary>
+    /// <returns>An istance of CardsFactory.Deck</returns>
     public Deck GetDeck(){
         Card[] monsterCards = new Card[MaxMonsterCards];
         Card[] cards = new Card[MaxCards - MaxMonsterCards];
 
         for (int i = 0; i < MaxMonsterCards && CardOptions != null; i++){
-            monsterCards[i] = GetRandomCard(CardOptions[nameof(MonsterCard)]);
+            monsterCards[i] = (Card) GetRandomCard(CardOptions[nameof(MonsterCard)]).Clone();
         }
 
         for (int i = 0; i < MaxCards - MaxMonsterCards && CardOptions != null; i++){
-            cards[i] = GetRandomCard(CardOptions[nameof(EffectCard)]);
+            cards[i] = (Card) GetRandomCard(CardOptions[nameof(EffectCard)]).Clone();
         }
 
-        return new Deck(monsterCards, cards);
+        return new Deck(monsterCards.Concat(cards).ToArray());
     }
 
+    /// <summary>
+    /// Gets a Deck containing all the cards specified by the user
+    /// </summary>
+    /// <param name="requestedCards">The cards you wanna have in the deck</param>
+    /// <returns>An istance of CardsFactory.Deck</returns>
     public Deck GetDeck(Card[] requestedCards){
         Card[] monsterCards = new Card[MaxMonsterCards];
         Card[] cards = new Card[MaxCards - MaxMonsterCards];
@@ -89,13 +132,13 @@ public class CardFactory{
         try{
             for (int i = 0; i < requestedCards.Length; i++){
                 if (requestedCards[i] is MonsterCard){
-                    monsterCards[j++] = requestedCards[i];
+                    monsterCards[j++] = (Card) requestedCards[i].Clone();
                 }
             }
             
             for (int i = 0; i < requestedCards.Length; i++){
                 if (requestedCards[i] is EffectCard){
-                    cards[k++] = requestedCards[i];
+                    cards[k++] = (Card) requestedCards[i].Clone();
                 }
             }
         }
@@ -104,20 +147,22 @@ public class CardFactory{
         }
 
         for (;j < MaxMonsterCards && CardOptions != null; j++){
-            monsterCards[j] = GetRandomCard(CardOptions[nameof(MonsterCard)]);
+            monsterCards[j] = (Card) GetRandomCard(CardOptions[nameof(MonsterCard)]).Clone();
         }
 
         for (;k < MaxCards - MaxMonsterCards && CardOptions != null; k++){
-            cards[k] = GetRandomCard(CardOptions[nameof(EffectCard)]);
+            cards[k] = (Card) GetRandomCard(CardOptions[nameof(EffectCard)]).Clone();
         }
 
-        return new Deck(monsterCards, cards);
+        return new Deck(monsterCards.Concat(cards).ToArray());
     }
 
-
+    /// <summary>
+    /// Reads the cards from the disk and initializes the Factory
+    /// </summary>
     private void LoadCardsFromDisk(){
-        MonsterReader = new JsonRW<MonsterCardJsonItem>("cardsDB/" + nameof(MonsterCard) + ".json");
-        EffectReader  = new JsonRW<EffectCardJsonItem> ("cardsDB/" + nameof(EffectCard)  + ".json");
+        MonsterReader = new JsonRW<MonsterCardJsonItem>("../cardsDB/" + nameof(MonsterCard) + ".json");
+        EffectReader  = new JsonRW<EffectCardJsonItem> ("../cardsDB/" + nameof(EffectCard)  + ".json");
         
         CardOptions = new Dictionary<string, Card[]>();
 
@@ -142,7 +187,12 @@ public class CardFactory{
             CardOptions.Add(nameof(EffectCard), eCards.ToArray());
         }
     }
-
+    
+    /// <summary>
+    /// Returns a randomized card, using it's appearing probability, from an specified set of cards
+    /// </summary>
+    /// <param name="cards">The actual set of cards</param>
+    /// <returns>A card</returns>
     private Card GetRandomCard(Card[] cards){
         float total = 0.0f;
         float[] weights = new float[cards.Length];

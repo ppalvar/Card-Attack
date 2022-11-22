@@ -2,8 +2,7 @@ namespace Cards;
 
 using System;
 using JsonItems;
-using IPowers;
-using Elements;
+using Powers;
 
 /// <summary>
 /// Cartas monstruo: estas se colocan en el campo
@@ -11,53 +10,71 @@ using Elements;
 /// </summary>
 public class MonsterCard : Card{
     #region Modifiers
-    public int AttackPoints{get;set;}
+
+    /// <summary>
+    /// The damage this monster makes to it's enemies
+    /// </summary>
+    /// <value>Integer(if < 0, then it heals)</value>
+    public int AttackPoints{get;private set;}
+
+    /// <summary>
+    /// The life points the monster haves
+    /// </summary>
+    /// <value>Non-negative integer</value>
     public int HP{get;set;}
 
-    private IPower[] Powers{get;set;}//Now it only assigns max 3 powers
+    /// <summary>
+    /// The power set of a monster
+    /// </summary>
+    public Power?[] Powers{get;private set;}//Now it only assigns max 3 powers
     private bool[] AssignedPowers{get;set;}
 
-    const int MaxPowers = 3;
+    public const int MaxPowers = 3;
 
     public bool IsAlive{get;private set;}
     public bool IsDead{get{return !IsAlive;}private set {IsAlive = !value;}}
     #endregion
 
-    public MonsterCard(string Name, string Description, float  AppearingProbability, int AttackPoints, int HP, string element) : base(Name, Description, AppearingProbability, element){
+    public MonsterCard(string Name, string Description, string Image, float  AppearingProbability, int AttackPoints, int HP, string element) : base(Name, Description, Image, AppearingProbability, element){
         this.Name = Name;
         this.HP = HP;
         this.AttackPoints = AttackPoints;
 
         // Type T_Element = this.element.GetType();
 
-        Powers = new IPower[MaxPowers];
+        Powers = new Power[MaxPowers];
         AssignedPowers = new bool[MaxPowers];
         IsAlive = true;
     }
 
-    public MonsterCard(MonsterCardJsonItem args) : base(args.name, args.description, args.appearingProbability, args.element){
+    public MonsterCard(MonsterCardJsonItem args) : base(args.name, args.description, args.image, args.appearingProbability, args.element){
         this.Name = args.name;
         this.HP = args.hp;
         this.AttackPoints = args.attack;
 
-        Powers = new IPower[MaxPowers];
+        Powers = new Power[MaxPowers];
         AssignedPowers = new bool[MaxPowers];
         IsAlive = true;
     }
 
+    /// <summary>
+    /// Attack phisically a monster
+    /// </summary>
+    /// <param name="target">A monster card</param>
     public void Attack(MonsterCard target){
-        target.HP = Math.Max(target.HP - this.AttackPoints, 0);
+        target.HP = target.HP - this.AttackPoints;
 
         if (target.HP <= 0){
             target.IsAlive = false;
         }
     }
 
-    public void AssignPower(IPower power){
-        if (power.Element.Type != this.element.Type){
-            throw new Exception($"can't assign power of type {power.Element.Type} to a monster of type {this.element.Type}");
-        }
-
+    /// <summary>
+    /// Equips a power to this monster. The powers are not removable
+    /// and are limited by the MaxPowers constant.
+    /// </summary>
+    /// <param name="power"></param>
+    public void AssignPower(Power power){
         for (int i = 0; i < this.Powers.Length; i++){
             if (!AssignedPowers[i]){
                 Powers[i] = power;
@@ -67,12 +84,6 @@ public class MonsterCard : Card{
         }
 
         throw new Exception("the maximum number of powers has been reached");
-    }
-
-    public void UsePowerAt(int index) {
-        if (this.Powers[index] != null){
-            this.Powers[index].ApplyEffect();
-        }
     }
 
     /**
