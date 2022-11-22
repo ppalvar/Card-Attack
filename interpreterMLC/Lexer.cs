@@ -10,7 +10,7 @@ public class Lexer {
 
     public static Dictionary<string, Token> ReservedKeywords{get;} = new Dictionary<string, Token>{
         {"int" , new Token(SYMBOLS.INT, "int")},
-        {"str" , new Token(SYMBOLS.STR, "str")},
+        {"string" , new Token(SYMBOLS.STR, "string")},
         {"bool", new Token(SYMBOLS.BOOL, "bool")},
         {"if" , new Token(SYMBOLS.IF, "if")},
         {"else" , new Token(SYMBOLS.ELSE, "else")},

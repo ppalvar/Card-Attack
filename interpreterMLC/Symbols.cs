@@ -88,6 +88,6 @@ public static class SymbolTable {
         Table.Clear();
         Define(new BuiltinDataType("int"));
         Define(new BuiltinDataType("bool"));
-        Define(new BuiltinDataType("str"));
+        Define(new BuiltinDataType("string"));
     }
 }
