@@ -8,11 +8,13 @@ using System;
 public abstract class CardJsonItem{
     public string name{ get; set; }
     public string description{ get; set; }
+    public string image{get;set;}
     public float appearingProbability{get;set;}
     public string element{get;set;}
         
-    public CardJsonItem(string name, string description, float appearingProbability, string element){
+    public CardJsonItem(string name, string description, string image, float appearingProbability, string element){
         this.name = name;
+        this.image = image;
         this.description = description;
         this.appearingProbability = appearingProbability;
         this.element = element;
@@ -32,11 +34,12 @@ public class MonsterCardJsonItem : CardJsonItem{
     public int hp{ get; set; }
 
     public MonsterCardJsonItem(string name,
-                           string description, 
+                           string description,
+                           string image,
                            float appearingProbability,
                            string element,
                            int attack,
-                           int hp) : base(name, description, appearingProbability, element)
+                           int hp) : base(name, description, image, appearingProbability, element)
     {
         this.attack = attack;
         this.hp = hp;
@@ -49,22 +52,17 @@ public class MonsterCardJsonItem : CardJsonItem{
 /// </summary>
 public class EffectCardJsonItem : CardJsonItem{
     public string powerName{get;set;}
-    public string powerToMatch{get;set;}
-    public string powerToTarget{get;set;}
-    public string powerToThis{get;set;}
+    public string powerCode{get;set;}
 
     public EffectCardJsonItem(string name,
-                           string description, 
+                           string description,
+                           string image,
                            float appearingProbability,
                            string element,
                            string powerName,
-                           string PowerToMatch,
-                           string PowerToTarget,
-                           string PowerToThis) : base(name, description, appearingProbability, element)
+                           string PowerCode) : base(name, description, image, appearingProbability, element)
     {
         this.powerName = powerName;
-        this.powerToMatch = PowerToMatch;
-        this.powerToTarget = PowerToMatch;
-        this.powerToThis = PowerToThis;
+        this.powerCode = PowerCode;
     }
 }
