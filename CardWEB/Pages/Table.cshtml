@@ -1,53 +1,21 @@
-﻿@page
+﻿@page "/table/{match-type}"
 @model MyApp.Namespace.TableModel
 @{
+    ViewData["Title"] = "Play!";
+
+    bool enemyIsHuman = ((string) ViewContext.RouteData.Values["match-type"] == "human");
 }
+
+<input type="hidden" name="match-type" id="match-type" value=@(ViewContext.RouteData.Values["match-type"])>
 
 <link rel="stylesheet" href="/css/table.css">
 <script src="/js/table.js"></script>
 
 <div class="container-fluid d-flex justify-content-begin card-container">
-    
-    <div id="card-slot-1a" class="bg-warning card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
-    <div id="card-slot-2a" class="bg-danger card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
-    <div id="card-slot-3a" class="bg-warning card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
-    <div id="card-slot-4a" class="bg-danger card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
-    <div id="card-slot-5a" class="bg-warning card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
+    @for (int i = 1; i <= 5; i++)
+    {
+        <div id="card-slot-@(i)b" class="card-slot"><!--Card here--></div>
+    }
 </div>
 
 <div class="player-info">
@@ -55,91 +23,49 @@
 </div>
 
 <div class="container-fluid d-flex justify-content-end card-container-end">
-    
-    <div id="card-slot-1b" class="bg-warning card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
-    <div id="card-slot-2b" class="bg-danger card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
-    <div id="card-slot-3b" class="bg-warning card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
-    <div id="card-slot-4b" class="bg-danger card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
-    <div id="card-slot-5b" class="bg-warning card-slot">
-        <div id="card" name="card" class="card">
-            <img src="img/front.png" id="card-img" alt="background" class="card-image">
-            <h6 class="card-title ">Texto de ejemplo</h6>
-            <img src="/img/card_0.png" alt="pollo" class="card-picture">
-            <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-        </div>
-    </div>
+     @for (int i = 1; i <= 5; i++)
+    {
+        <div id="card-slot-@(i)a" class="card-slot"><!--Card here--></div>
+    }
 </div>
 
 <div class="container-fluid d-flex justify-content-begin table">
-    <div id="table-slot-1a" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
-    <div id="table-slot-2a" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
-    <div id="table-slot-3a" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
-    <div id="table-slot-4a" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
-    <div id="table-slot-5a" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
+     @for (int i = 1; i <= 5; i++)
+    {
+        <div id="table-slot-@(i)b" class="table-slot"></div>
+    }
 </div>
 
 <div class="container-fluid d-flex justify-content-end table-end">
-    <div id="table-slot-1b" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
-    <div id="table-slot-2b" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
-    <div id="table-slot-3b" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
-    <div id="table-slot-4b" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
-    <div id="table-slot-5b" class="table-slot">
-        <img src="/img/empty-frame.png" alt="frame" class="table-slot-img">
-    </div>
+    @for (int i = 1; i <= 5; i++)
+    {
+        <div id="table-slot-@(i)a" class="table-slot"></div>
+    }
 </div>
 
 <div class="player-info-end">
     <img src="/img/back.png" alt="back" class="player-info-img">
 </div>
-<!-- <div id="card" name="card" class="card">
-    <img src="img/front.png" id="card-img" alt="background" class="card-image">
-    <h6 class="card-title ">Texto de ejemplo</h6>
-    <img src="/img/card_0.png" alt="pollo" class="card-picture">
-    <p class="card-description">Lorem ipsum dolor sit amet, foo bar baz, just dummy text here, nothing really matters</p>
-</div> -->
+
+<div class="modal fade" id="end-game-modal">
+    <div class="modal-dialog ">
+        <div class="modal-content back-fade">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-center text-warning">Do you wanna leave?</h4>
+                <button type="button" class="btn-close bg-warning" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="d-flex justify-content-center" data-bs-dismiss="modal">
+                    <h2 class="card-option-btn">No</h2>
+                </div>
+                <a href="/">
+                    <div class="d-flex justify-content-center" >
+                        <h2 class="card-option-btn bg-warning">Yes</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

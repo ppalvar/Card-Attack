@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'BlackBox';
+    src: url('/fonts/black_box.ttf');
+}
+
 .card {
     position: relative;
     left: 0px;
@@ -137,7 +142,7 @@
 
 .table-end {
     position: absolute;
-    bottom: 6em;
+    bottom: 7em;
     right: 6em;
     z-index: 0;
 }
@@ -149,4 +154,47 @@
 
 .table-slot-img {
     height: 11em;
+}
+
+.back-fade {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+}
+
+.card-option-btn {
+    font-size: 1.5em;
+    background-color: rgb(56, 179, 90);
+    font-family: 'BlackBox';
+    text-shadow: 2px 2px black;
+    color: rgb(213, 210, 210);
+    text-align: center;
+    border-radius: 3em;
+    border: solid rgb(30, 29, 29) 2px;
+    width: 10em;
+    padding: 10px 0;
+
+    transition: transform 250ms;
+}
+
+.card-option-btn:hover {
+    transform: scale(1.1,1.1);
+}
+
+@keyframes flip {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.flip {
+    animation-name: flip;
+    animation-duration: 500ms;
+    animation-fill-mode: forwards;
+}
+
+.selected {
+    
 }

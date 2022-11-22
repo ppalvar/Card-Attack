@@ -8,14 +8,12 @@
 
 <h1 class="game-title">Card Attack!</h1>
 
-<a href="/table">
-    <div id="start-btn" class="start-btn d-flex justify-content-center">
-        <img src="img/play.svg" alt="Play" class="start-btn-img">
-    </div>
-</a>
+<div id="start-btn" class="start-btn d-flex justify-content-center">
+    <input type="image" src="/img/play.svg" alt="Play" class="start-btn-img" data-bs-toggle="modal" data-bs-target="#match-type-modal">
+</div>
 
 <div class="stick-bottom">
-    <div class="d-flex justify-content-center" >
+    <div class="d-flex justify-content-center" data-bs-toggle="modal" data-bs-target="#whom-deck-modal">
         <h2 class="create-card-btn">Select Deck</h2>
     </div>
     <div class="d-flex justify-content-center" data-bs-toggle="modal" data-bs-target="#create-card-modal">
@@ -42,6 +40,56 @@
                 <a href="/newEffect/">
                     <div class="d-flex justify-content-center" >
                         <h2 class="card-option-btn">Effect card</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="match-type-modal">
+    <div class="modal-dialog ">
+        <div class="modal-content back-fade">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-center text-warning">Against who you wanna play?</h4>
+                <button type="button" class="btn-close bg-warning" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <a href="/table/ai">
+                    <div class="d-flex justify-content-center" >
+                        <h2 class="card-option-btn">Computer</h2>
+                    </div>
+                </a>
+                <a href="/table/human">
+                    <div class="d-flex justify-content-center" >
+                        <h2 class="card-option-btn">Human</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="whom-deck-modal">
+    <div class="modal-dialog ">
+        <div class="modal-content back-fade">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title text-center text-warning">Whom's deck will be edited?</h4>
+                <button type="button" class="btn-close bg-warning" data-bs-dismiss="modal"></button>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <a href="/select-deck/player-A">
+                    <div class="d-flex justify-content-center" >
+                        <h2 class="card-option-btn">Player A</h2>
+                    </div>
+                </a>
+                <a href="/select-deck/player-B">
+                    <div class="d-flex justify-content-center" >
+                        <h2 class="card-option-btn">Player B</h2>
                     </div>
                 </a>
             </div>

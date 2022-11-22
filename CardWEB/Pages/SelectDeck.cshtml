@@ -1,0 +1,51 @@
+﻿@page "/select-deck/{player}"
+@model MyApp.Namespace.SelectDeckModel
+@{
+    ViewData["Title"] = "Select Deck";
+}
+
+@{
+    CardFactorys.CardFactory factory = new CardFactorys.CardFactory();
+
+    Cards.Card[] cards = factory.GetCardOptions();
+    
+    int cardIndex = 0;
+}
+
+<link rel="stylesheet" href="/css/select-deck.css">
+<script src="/js/select-deck.js"></script>
+
+<script>
+    var cards = {};
+</script>
+
+<div class="container-flex d-flex justify-content-end">
+    <button id="cancel-btn" class="btn btn-warning mx-1 my-1">Cancel</button>
+    <button id="accept-btn" class="btn btn-success mx-1 my-1">Accept</button>
+</div>
+
+<input type="hidden" name="player" id="player" value=@(ViewContext.RouteData.Values["player"])>
+
+<div id="selected-cards-gallery" class="masonry glutterless container selected-cards"></div>
+
+<div class="masonry glutterless container card-options" id="card-options">
+    @foreach (var card in cards)
+    {
+            <div id="card-@(++cardIndex)" class="brick">
+                <div name="card" class="card">
+                    <script>
+                        cards[@(cardIndex)] = "@(card.Name)";
+                    </script>
+                @if (card.GetType().ToString() == "Cards.EffectCard"){
+                    <img src="/img/front.png" id="card-img" alt="background" class="card-image" style="background-color:rgb(117, 64, 164);">
+                }
+                else{
+                    <img src="/img/front.png" id="card-img" alt="background" class="card-image" style="background-color:rgb(146, 139, 65);">
+                }
+                    <h6 class="card-title">@card.Name</h6>
+                    <img src=@("/img/" + card.Image) alt="pollo" class="card-picture">
+                    <p class="card-description">@card.Description</p>
+                </div>
+            </div>
+    }
+</div>

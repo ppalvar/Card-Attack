@@ -1,11 +1,18 @@
+using Controllers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
-int a = 0;
-app.MapGet("api/", () => (++a).ToString());
+
+app.MapPost("/api/new-monster-card", CardCreator.CreateMonsterCard);
+app.MapPost("/api/new-effect-card", CardCreator.CreateEffectCard);
+app.MapPost("/api/new-game/{type}", Game.NewGame);
+app.MapPost("/api/new-turn/{auto}", Game.NewTurn);
+app.MapPost("/api/play", Game.Play);
+app.MapPost("/api/attack/{card}/{target}", Game.Attack);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
