@@ -133,20 +133,31 @@ public class Match{
     /// </summary>
     /// <returns></returns>
     public Player? Winner(){
-        bool playerFlag = true;
-        bool enemyFlag  = true;
+        bool playerFlag = false;
+        bool enemyFlag  = false;
 
-        for (int i = 0; player.Table != null && i < player.Table.Length; i++){
+        for (int i = 0; i < player.Table.Length; i++){
             if (player.Table[i] != null){
-                playerFlag = false;
+                playerFlag = true;
             }
-            if (enemy.Table != null && enemy.Table[i] != null){
-                enemyFlag = false;
+
+            if (enemy.Table[i] != null){
+                enemyFlag = true;
             }
         }
 
-        if (player.HasNoMonsters() && playerFlag)return enemy;
-        if (enemy.HasNoMonsters()  && enemyFlag) return player;
+        for (int i = 0; i < player.Hand.Length; i++){
+            if (player.Hand[i] != null){
+                playerFlag = true;
+            }
+
+            if (enemy.Hand[i] != null){
+                enemyFlag = true;
+            }
+        }
+
+        if (player.HasNoMonsters() && !playerFlag)return enemy;
+        if (enemy.HasNoMonsters()  && !enemyFlag) return player;
 
         return null;
     }
