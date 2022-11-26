@@ -95,6 +95,15 @@ public class Player{
         }
     }
 
+    public bool DropCard(int index) {
+        if (index < this.Hand.Length && this.Hand[index] != null) {
+            this.Hand[index] = null;
+            return true;
+        }
+
+        return false;
+    }
+
     /**
         This methods MUST have the format :
             protected object MethodName(object param);
