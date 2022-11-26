@@ -11,6 +11,7 @@ public class CardResponse {
     public int hp {get;set;} = -1;
     public int initialHp {get;set;} = -1;
     public bool isMonster{get;set;} = false;
+    public string?[] powers{get;set;} = {};
 
     public int index{get;set;} = 0;
 
@@ -26,6 +27,10 @@ public class CardResponse {
             isMonster = true;
             attack = mCard.AttackPoints;
             hp = initialHp = mCard.HP;
+        }
+
+        else if (card is EffectCard eCard) {
+            this.powers = new string[] {eCard.power.Name};
         }
     }
 }

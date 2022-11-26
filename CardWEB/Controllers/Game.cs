@@ -10,7 +10,7 @@ public static class Game {
 
     public static string NewGame(string type, HttpContext request) {
         if (type == "human") {
-            match = new Match(MatchTypes.HumanVSHuman, 5, 5, 0, 1);
+            match = new Match(MatchTypes.HumanVSHuman, 5, 5);
         }
         else if (type == "ai"){
             match = new Match(MatchTypes.ComputerVSHuman, 5, 5);
@@ -118,5 +118,32 @@ public static class Game {
         }
 
         return JsonSerializer.Serialize(response);
+    }
+
+    public static string DropCard(int index, HttpContext httpContext) {
+        if (match == null) throw new Exception("there is no active match yet");
+
+        bool flag = match.player.DropCard(index);
+        bool endGame = match.Winner() != null;
+
+        return JsonSerializer.Serialize(new ActionResponse(flag, false, endGame));
+    }
+
+    public static string EquipPower(int cardIndex, int targetIndex, HttpContext context) {
+        if (match == null) throw new Exception("there is no active match yet");
+
+        bool flag = false;
+
+        try {
+            match.Play(cardIndex, match.player.Table[targetIndex]);
+            flag = true;
+        }
+        catch {
+            // do nothing
+        }
+
+        bool endGame = match.Winner() != null;
+
+        return JsonSerializer.Serialize(new ActionResponse(flag, false, endGame));
     }
 }
