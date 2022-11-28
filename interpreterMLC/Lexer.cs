@@ -54,7 +54,7 @@ public class Lexer {
 
     public Token GetNextToken() {
         SkipWhitespaces();
-        if (this.CurrentChar != '#') {
+        while (this.CurrentChar != '#') {
             #region Symbols
 
                 if (IsNumber(this.CurrentChar)){
@@ -76,7 +76,7 @@ public class Lexer {
                     return new Token(SYMBOLS.MUL, "*");
                 }
 
-                if (this.CurrentChar == '/') {
+                if (this.CurrentChar == '/' && Peek() != '/') {
                     Advance();
                     return new Token(SYMBOLS.DIV, "/");
                 }
@@ -134,6 +134,10 @@ public class Lexer {
                 if (this.CurrentChar == '@') {
                     Advance();
                     return new Token(SYMBOLS.OBJECT, GetIdentifier());
+                }
+
+                if (this.CurrentChar == '/' && Peek() == '/') {
+                    SkipComment();
                 }
 
                 if (this.CurrentChar == '#') {
@@ -270,5 +274,9 @@ public class Lexer {
         }
 
         return str;
+    }
+
+    private void SkipComment() {
+        while (CurrentChar != '\n')Advance();
     }
 }
