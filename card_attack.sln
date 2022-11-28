@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cardAttackCLI", "cardAttack
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "interpreterMLC", "interpreterMLC\interpreterMLC.csproj", "{C4CAAF47-79A5-429C-A250-CF995F31DD6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CardWEB", "CardWEB\CardWEB.csproj", "{A5D9E2B2-7908-4152-989F-99EBC3045300}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{C4CAAF47-79A5-429C-A250-CF995F31DD6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4CAAF47-79A5-429C-A250-CF995F31DD6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4CAAF47-79A5-429C-A250-CF995F31DD6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5D9E2B2-7908-4152-989F-99EBC3045300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5D9E2B2-7908-4152-989F-99EBC3045300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5D9E2B2-7908-4152-989F-99EBC3045300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5D9E2B2-7908-4152-989F-99EBC3045300}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

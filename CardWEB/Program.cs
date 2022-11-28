@@ -13,6 +13,8 @@ app.MapPost("/api/new-game/{type}", Game.NewGame);
 app.MapPost("/api/new-turn/{auto}", Game.NewTurn);
 app.MapPost("/api/play", Game.Play);
 app.MapPost("/api/attack/{card}/{target}", Game.Attack);
+app.MapPost("/api/drop-card/{index}", Game.DropCard);
+app.MapPost("/api/equip/{cardIndex}/{targetIndex}", Game.EquipPower);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

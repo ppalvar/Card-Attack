@@ -115,11 +115,12 @@
     top: 1em;
     right: 1em;
 
-    z-index: 0;
+    z-index: 1;
 }
 
 .player-info-img {
-    height: 16em;
+    height: 12em;
+    z-index: 1;
 }
 
 .player-info-end {
@@ -133,20 +134,27 @@
     z-index: 0;
 }
 
-.table {
+.table:not(fullscreen) {
     position: absolute;
-    top: 6em;
+    top: 5em;
     left: 6em;
     z-index: 0;
 }
 
-.table-end {
+.table-end:not(fullscreen) {
     position: absolute;
-    bottom: 7em;
-    right: 6em;
+    bottom: 4em;
+    left: 6em;
     z-index: 0;
 }
 
+.table:fullscreen {
+    top: 3em;
+}
+
+.table-end:fullscreen{
+    bottom: 6em;
+}
 
 .table-slot {
     margin: 1em;
@@ -180,6 +188,21 @@
     transform: scale(1.1,1.1);
 }
 
+.card-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    
+    min-width: 20em;
+    max-width: 20em;
+    
+    background-color: rgba(255, 255, 255, 0.493);
+    margin: 2em;
+    border-radius: 6px;
+    border: solid 2px rgba(40, 53, 38, 0.84);
+}
+
 @keyframes flip {
     from {
         transform: scaleX(0);
@@ -196,5 +219,12 @@
 }
 
 .selected {
-    
+    border-radius: 4px;
+    background-color: rgb(78, 181, 237);
+    border: solid 3px rgb(78, 181, 237);
 }
+
+/* .power-btn {
+    display: block;
+    width: ;
+} */

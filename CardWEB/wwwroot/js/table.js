@@ -1,6 +1,12 @@
 window.addEventListener("load", () => {
     let selectedCard = null;
+    let selectedCardContext = null;
     let selectedMonster = null;
+
+    let selectedPower = null;
+
+    let currentPlayer = "player A";
+
     let cardSlotsA = [];
     let cardSlotsB = [];
 
@@ -35,41 +41,41 @@ window.addEventListener("load", () => {
         }
     });
 
-    async function postData(url='', data={}) {
+    async function postData(url = '', data = {}) {
         const response = await fetch(url, {
-            method: 'POST', 
-            mode: 'cors', 
-            cache: 'no-cache', 
-            credentials: 'same-origin', 
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             headers: {
-                'Content-Type': 'application/json'                
+                'Content-Type': 'application/json'
             },
-            redirect: 'follow', 
-            referrerPolicy: 'no-referrer', 
-            body: JSON.stringify(data) 
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data)
         });
-        
+
         return response.json(); // parses JSON response into native JavaScript objects
     }
 
-    async function getData(url='', data={}) {
+    async function getData(url = '', data = {}) {
         const response = await fetch(url, {
-            method: 'GET', 
-            mode: 'cors', 
-            cache: 'no-cache', 
-            credentials: 'same-origin', 
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             headers: {
-                'Content-Type': 'application/json'                
+                'Content-Type': 'application/json'
             },
-            redirect: 'follow', 
-            referrerPolicy: 'no-referrer', 
-            body: JSON.stringify(data) 
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data)
         });
 
         return response.json();
     }
 
-    const matchType = document.getElementById("match-type"). value;
+    const matchType = document.getElementById("match-type").value;
 
     let playerA = [];
     let playerB = [];
@@ -88,7 +94,7 @@ window.addEventListener("load", () => {
         playerB = [];
     }
 
-    let playerHand = postData(`/api/new-game/${matchType}`, {playerA:playerA, playerB:playerB});
+    let playerHand = postData(`/api/new-game/${matchType}`, { playerA: playerA, playerB: playerB });
 
     function showCards(hand) {
         setTimeout(() => {
@@ -101,14 +107,15 @@ window.addEventListener("load", () => {
                     catch {
 
                     }
-                    
-                    if (val[i] === undefined)continue;
+
+                    if (val[i] === undefined) continue;
 
                     const color = !val[i].isMonster ? "rgb(117, 64, 164)" : "rgb(146, 139, 65)";
 
                     const node = document.createElement("div");
                     node.id = `${slot.id}-${i}`;
-                    node.innerHTML =   `<div name="card" class="card">
+                    node.classList.add("px-0", "py-0");
+                    node.innerHTML = `<div name="card" class="card">
                                             <img src="/img/front.png" id="card-img" alt="background" class="card-image"
                                             style="background-color: ${color};">
                                             <h6 class="card-title ">${val[i].name}</h6>
@@ -127,45 +134,123 @@ window.addEventListener("load", () => {
     }
 
     function flipAnimation(node) {
-        node.animate([{transform: "scaleX(0)"}, {transform: "scaleX(1)"}], {duration:400, iterations:1});
+        node.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 400, iterations: 1 });
     }
 
     function flipReverseAnimation(node) {
-        node.animate([{transform: "scaleX(1)"}, {transform: "scaleX(0)"}], {duration:400, iterations:1});
+        node.animate([{ transform: "scaleX(1)" }, { transform: "scaleX(0)" }], { duration: 400, iterations: 1 });
     }
 
-    function select(node) {
+    function select(node=null, context=null) {
+        selectedPower = null;
+
+        showInfo(context, node);
+        
+        if (selectedCard != null) {
+            selectedCard.classList.remove("selected");
+        }
+        if (node == null || node === selectedCard) {
+            selectedCard = null;
+            showInfo();
+            return;
+        }
+        
+        selectedCard = node;
+        selectedCardContext = {...context};
         node.classList.add("selected");
-    }
 
-    function unselect(node) {
-        node.classList.remove("selected");
+    }
+    
+    function showInfo(context=null, node=null) {
+        const cardInfo = document.getElementById("card-info");
+        
+        cardInfo.querySelector("#powers").innerHTML = "";
+
+        try {
+            cardInfo.querySelector("#drop-btn-container").firstChild.remove()
+        }
+        catch {
+            //do nothing
+        }
+        
+        if (node == null) {
+            cardInfo.querySelector("#image").innerHTML = `<img src="/img/back.png" alt="back" class="player-info-img">`;    
+            cardInfo.querySelector("#info").innerText = "";
+            return;
+        }
+        
+        cardInfo.querySelector("#image").innerHTML = node.innerHTML;
+        cardInfo.querySelector("#info").innerText = `${context.isMonster? `Monster [HP: ${context.hp}; Attack: ${context.attack}]: ` : "Effect: "} ${context.description}`;
+
+        if (!context.isMonster) {
+            cardInfo.querySelector("#powers").innerHTML = `<p class="text-success py-2 px-2">Power: ${context.powers[0]}</p>`;
+        }
+        
+        else if (context.powers.length != 0){
+            context.powers.forEach(el => {
+                const div = document.createElement("div");
+                const btn = document.createElement("button");
+
+                div.classList.add("d-flex", "justify-content-center");
+
+                btn.classList.add("btn", "btn-success", "mx-0", "my-2");
+                btn.style.maxWidth = "85%";
+                btn.style.minWidth = "85%";
+                btn.innerText = el;
+
+                btn.onclick = () => {
+                    selectedPower = el;
+                }
+
+                div.append(btn);
+                
+                cardInfo.querySelector("#powers").append(div);
+            });
+        }
+
+        
+        if (cardSlotsA.includes(node.parentNode)) {
+            const btn = document.createElement("button");
+            
+            btn.classList.add("btn", "btn-danger");
+            btn.innerText = "Drop this card";
+    
+            btn.onclick = () => {
+                postData(`/api/drop-card/${context.index}`).then(val => {
+                    if (val.canMove) {
+                        node.remove();
+                        select();
+                    }
+    
+                    if (val.gameEnds)window.location.replace(`/game-over/${currentPlayer}`); 
+                });
+            };
+    
+            cardInfo.querySelector("#drop-btn-container").append(btn);
+        }
     }
 
     function addJS(node, context) {
         node.onclick = () => {
-            select(node);                
-            if (!context.isMonster) {
-                selectedCard = node;
-            }
-            else if (selectedCard != null) {
-            }
+            select(node.firstChild, context);
         }
-        
+
         node.ondblclick = () => {
             if (context.isMonster) {
                 let i = 0;
 
                 for (let slot of tableSlotsA) {
-                    i ++;
+                    i++;
                     if (slot.children.length == 0) {
-                        postData("/api/play", {CardIndex : context.index}).then(val => {
-                            if (val.canMove){
+                        postData("/api/play", { CardIndex: context.index }).then(val => {
+                            if (val.canMove) {
+                                select(null);
                                 const tmp = document.createElement("div");
                                 const progress = document.createElement("div");
 
                                 tmp.innerHTML = node.innerHTML;
-                                progress.classList.add("progress","my-1");
+                                tmp.classList.add("px-0", "py-0");
+                                progress.classList.add("progress", "my-1");
                                 progress.innerHTML = `<div class="progress-bar progress-bar-animated progress-bar-striped bg-success" style="width:100%;color:black;overflow:visible;">HP: ${context.hp}|Attack: ${context.attack}</div>`;
 
                                 node.firstChild.remove();
@@ -177,29 +262,44 @@ window.addEventListener("load", () => {
                                     if (selectedMonster !== null && tableSlotsB.includes(slot)) {
                                         postData(`/api/attack/${selectedMonster.index}/${i - 1}`).then(val => {
                                             if (val.canMove) {
-                                                context.hp -= selectedMonster.attack;console.log(context.hp);
+                                                select();
+
+                                                context.hp -= selectedMonster.attack;
                                                 context.hp = Math.max(context.hp, 0);
                                                 slot.firstChild.firstChild.style.width = `${context.hp / context.initialHp * 100}%`;
                                                 slot.firstChild.firstChild.innerText = `HP: ${context.hp}|Attack: ${context.attack}`;
-                                                
-                                                setTimeout(() => {
-                                                    if (context.hp <= 0) {
-                                                        slot.lastChild.remove();
-                                                        slot.firstChild.remove();
-                                                    }
-                                                }, 100);
 
-                                                if (val.gameEnds)window.location.replace("/game-over");
+                                                if (context.hp <= 0) {
+                                                    slot.lastChild.remove();
+                                                    slot.firstChild.remove();
+                                                }
+
+                                                if (val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
 
                                                 selectedMonster = null;
                                             }
 
-                                            if (val.turnEnds)endTurn(true);
+                                            if (val.turnEnds) endTurn(true);
                                         });
                                     }
                                     else if (tableSlotsA.includes(slot)) {
-                                        selectedMonster = {...context};
-                                        selectedMonster.index = i - 1;
+                                        if (selectedCard != null && !selectedCardContext.isMonster) {
+                                            postData(`/api/equip/${selectedCardContext.index}/${i - 1}`).then(val => {
+                                                if (val.canMove) {
+                                                    context.powers.push(selectedCardContext.powers[0]);
+                                                    console.log(selectedCardContext);
+                                                    const tmp = selectedCard;
+                                                    select();
+                                                    tmp.remove();
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            selectedMonster = { ...context };
+                                            selectedMonster.index = i - 1;
+                                            select(slot.lastChild, context);
+                                        }
+                                        
                                     }
                                 }
                             }
@@ -214,7 +314,7 @@ window.addEventListener("load", () => {
     function endTurn(auto = false) {
         for (let slot of cardSlotsA) {
             flipReverseAnimation(slot);
-            setTimeout (() => slot.classList.add("d-none"), 400);
+            setTimeout(() => slot.classList.add("d-none"), 400);
         }
 
         let tmp = cardSlotsA;
@@ -225,12 +325,16 @@ window.addEventListener("load", () => {
         tableSlotsA = tableSlotsB;
         tableSlotsB = tmp;
 
+        if (currentPlayer == "player A") currentPlayer = "player B";
+        else currentPlayer = "player A";
+
         for (let slot of cardSlotsA) {
             slot.classList.remove("d-none");
         }
 
-        playerHand = postData(`/api/new-turn/${auto}`, {turnEnds: true});
+        playerHand = postData(`/api/new-turn/${auto}`, { turnEnds: true });
         showCards(playerHand);
+        select();
     }
 
     showCards(playerHand);//todo: remove this

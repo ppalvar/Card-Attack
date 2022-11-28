@@ -5,7 +5,7 @@ files = os.listdir()
 
 i = 0
 
-for file in files:
+for file in reversed(files):
     if 'card' not in file:
         continue
     

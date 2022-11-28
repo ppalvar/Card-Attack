@@ -1,5 +1,5 @@
 window.addEventListener("load", () => {
-    const maxImg = 34;
+    const maxImg = 53;
 
     let currentImg = 1;
 
