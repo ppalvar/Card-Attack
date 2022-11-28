@@ -1,7 +1,25 @@
-﻿@page "/game-over"
+﻿@page "/game-over/{player}"
 @model MyApp.Namespace.GameOverModel
 @{
     ViewData["Title"] = "Game Over";
+
+    string player =  (string?) ViewContext.RouteData.Values["player"] ?? "null";
 }
 
-<h1>Game Over</h1>
+<link rel="stylesheet" href="/css/game-over.css">
+
+<div class="pyro">
+  <div class="before"></div>
+  <div class="after"></div>
+</div>
+
+<h1 class="game-title">GAME OVER!</h1>
+<h2 class="game-subtitle game-title">@(player.ToUpper()) WINS!!!</h2>
+
+<a href="/">
+    <div class="stick-bottom">
+        <div class="d-flex justify-content-center">
+            <h2 class="custom-btn">Back to Menu</h2>
+        </div>
+    </div>
+</a>

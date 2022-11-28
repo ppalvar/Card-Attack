@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Play!";
 
-    bool enemyIsHuman = ((string) ViewContext.RouteData.Values["match-type"] == "human");
+    bool enemyIsHuman = ((string?) ViewContext.RouteData.Values["match-type"] == "human");
 }
 
 <input type="hidden" name="match-type" id="match-type" value=@(ViewContext.RouteData.Values["match-type"])>
@@ -18,11 +18,7 @@
     }
 </div>
 
-<div class="player-info">
-    <img src="/img/back.png" alt="back" class="player-info-img">
-</div>
-
-<div class="container-fluid d-flex justify-content-end card-container-end">
+<div class="container-fluid d-flex justify-content-begin card-container-end">
      @for (int i = 1; i <= 5; i++)
     {
         <div id="card-slot-@(i)a" class="card-slot"><!--Card here--></div>
@@ -36,15 +32,20 @@
     }
 </div>
 
-<div class="container-fluid d-flex justify-content-end table-end">
+<div class="container-fluid d-flex justify-content-begin table-end">
     @for (int i = 1; i <= 5; i++)
     {
         <div id="table-slot-@(i)a" class="table-slot"></div>
     }
 </div>
 
-<div class="player-info-end">
-    <img src="/img/back.png" alt="back" class="player-info-img">
+<div class="card-info" id="card-info">
+    <div id="image" class="d-flex justify-content-center mt-2">
+        <img src="/img/back.png" alt="back" class="player-info-img">
+    </div>
+    <p id="info" class="px-2 py-2 info-text text-center"></p>
+    <div id="powers"></div>
+    <div id="drop-btn-container" class="d-flex justify-content-center"></div>
 </div>
 
 <div class="modal fade" id="end-game-modal">
