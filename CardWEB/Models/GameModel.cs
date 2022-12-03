@@ -41,7 +41,7 @@ public class CardNames {
 
     public CardNames(string[] playerA, string[] playerB) {
         this.playerA = playerA;
-        this.playerB = playerA;
+        this.playerB = playerB;
     }
 }
 
@@ -61,6 +61,10 @@ public class ActionResponse {
     public bool canMove{get;set;} = false;
     public bool turnEnds{get; set;} = false;
     public bool gameEnds{get; set;} = false;
+
+    public CardResponse?[]? Hand{get;set;}
+    public CardResponse?[]? TableA{get;set;}
+    public CardResponse?[]? TableB{get;set;}
 
     public ActionResponse(bool canMove, bool turnEnds, bool gameEnds) {
         this.canMove = canMove;

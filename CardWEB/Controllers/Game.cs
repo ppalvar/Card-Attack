@@ -1,6 +1,7 @@
 namespace Controllers;
 
 using Match;
+using Powers;
 using Cards;
 using Models;
 using System.Text.Json;
@@ -10,7 +11,7 @@ public static class Game {
 
     public static string NewGame(string type, HttpContext request) {
         if (type == "human") {
-            match = new Match(MatchTypes.HumanVSHuman, 5, 5);
+            match = new Match(MatchTypes.HumanVSHuman, 5, 5, 1);
         }
         else if (type == "ai"){
             match = new Match(MatchTypes.ComputerVSHuman, 5, 5);
@@ -22,18 +23,8 @@ public static class Game {
 
         if (match != null) {
             if (names != null) {
-                string[] playerA = new string[names.playerA.Length];
-                for (int i = 0; i < names.playerA.Length; i++) {
-                    playerA[i] = names.playerA[i];
-                }
-
-                string[] playerB = new string[names.playerB.Length];
-                for (int i = 0; i < names.playerB.Length; i++) {
-                    playerB[i] = names.playerB[i];
-                }
-
-                match.SetDeck(playerA, true);
-                match.SetDeck(playerB, false);
+                match.SetDeck(names.playerA, true);
+                match.SetDeck(names.playerB, false);
             }
 
             match.SetDeck(true);
@@ -110,6 +101,32 @@ public static class Game {
             try {
                 response = new ActionResponse(true, match.Attack(card, _target), match.Winner() != null);
 
+                response.Hand = new CardResponse[match.player.Hand.Length];
+                for (int i = 0; i < match.player.Hand.Length; i++) {
+                    Card? m = match.player.Hand[i];
+
+                    if (m != null) {
+                        response.Hand[i] = new CardResponse(m, i);
+                    }
+                }
+
+                response.TableA = new CardResponse[match.player.Table.Length];
+                response.TableB = new CardResponse[match.player.Table.Length];
+                
+                for (int i = 0; i < match.player.Table.Length; i++) {
+                    MonsterCard? p = (MonsterCard?) match.player.Table[i];
+                    MonsterCard? e = (MonsterCard?) match.enemy.Table[i];
+
+                    if (p != null) {
+                        response.TableA[i] = new CardResponse(p, i);
+                    }
+                    if (e != null) {
+                        response.TableB[i] = new CardResponse(e, i);
+                    }
+                }
+
+                response.Hand = response.Hand.Where((val) => val != null).ToArray();
+
                 return JsonSerializer.Serialize(response);
             }
             catch (Exception e){
@@ -145,5 +162,70 @@ public static class Game {
         bool endGame = match.Winner() != null;
 
         return JsonSerializer.Serialize(new ActionResponse(flag, false, endGame));
+    }
+
+    public static string UsePower(int cardindex, int targetIndex, string powerName, HttpContext context) {
+        if (match == null) throw new Exception("there is no active match yet");
+
+        ActionResponse response = new ActionResponse(false, false, false);
+
+        if (cardindex <= match.player.Table.Length && targetIndex <= match.enemy.Table.Length) {
+            MonsterCard? monster = (MonsterCard?) match.player.Table[cardindex];
+
+            if (monster != null) {
+                int power = -1;
+                for (int i = 0; i < monster.Powers.Length; i++) {
+                    Power? p = monster.Powers[i];
+
+                    if (p != null && p.Name == powerName) {
+                        power = i;
+                    }
+                }
+
+                if (power != -1) {
+                    MonsterCard? target = (MonsterCard?) match.enemy.Table[targetIndex];
+                    if (target != null) {
+                        try {
+                            match.UsePower(cardindex, power, target);
+
+                            response.canMove = true;
+                        }
+                        catch (Exception e) {
+                            Console.WriteLine(e.Message);
+                        }
+                    }
+                }
+            }
+        }
+
+        response.gameEnds = match.Winner() != null;
+
+        response.Hand = new CardResponse[match.player.Hand.Length];
+        for (int i = 0; i < match.player.Hand.Length; i++) {
+            Card? m = match.player.Hand[i];
+
+            if (m != null) {
+                response.Hand[i] = new CardResponse(m, i);
+            }
+        }
+
+        response.TableA = new CardResponse[match.player.Table.Length];
+        response.TableB = new CardResponse[match.player.Table.Length];
+        
+        for (int i = 0; i < match.player.Table.Length; i++) {
+            MonsterCard? p = (MonsterCard?) match.player.Table[i];
+            MonsterCard? e = (MonsterCard?) match.enemy.Table[i];
+
+            if (p != null) {
+                response.TableA[i] = new CardResponse(p, i);
+            }
+            if (e != null) {
+                response.TableB[i] = new CardResponse(e, i);
+            }
+        }
+
+        response.Hand = response.Hand.Where((val) => val != null).ToArray();
+
+        return JsonSerializer.Serialize(response);
     }
 }
