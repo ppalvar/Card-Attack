@@ -96,7 +96,7 @@ window.addEventListener("load", () => {
 
     let playerHand = postData(`/api/new-game/${matchType}`, { playerA: playerA, playerB: playerB });
 
-    function showCards(hand) {
+    function showCards(hand, flip=true) {
         setTimeout(() => {
             hand.then(val => {
                 let i = 0;
@@ -123,7 +123,11 @@ window.addEventListener("load", () => {
                                             <p class="card-description">${val[i].description}</p>
                                         </div>`;
                     slot.appendChild(node);
-                    flipAnimation(slot);
+
+                    if (flip) {
+                        flipAnimation(slot);
+                    }
+                    
                     addJS(slot, val[i]);
                     i++;
                 }
@@ -260,34 +264,60 @@ window.addEventListener("load", () => {
 
                                 slot.onclick = () => {
                                     if (selectedMonster !== null && tableSlotsB.includes(slot)) {
-                                        postData(`/api/attack/${selectedMonster.index}/${i - 1}`).then(val => {
-                                            if (val.canMove) {
-                                                select();
+                                        if (selectedPower != null) {
+                                            postData(`/api/use-power/${selectedMonster.index}/${i - 1}/${selectedPower}`).then(val => {
+                                                if (val.canMove) {
+                                                    select();
+                                                    showCards(new Promise((onResolve) => {onResolve(val.Hand)}), false);
 
-                                                context.hp -= selectedMonster.attack;
-                                                context.hp = Math.max(context.hp, 0);
-                                                slot.firstChild.firstChild.style.width = `${context.hp / context.initialHp * 100}%`;
-                                                slot.firstChild.firstChild.innerText = `HP: ${context.hp}|Attack: ${context.attack}`;
+                                                    if (val.turnEnds) {
+                                                        updateTable(tableSlotsA, val.TableB);
+                                                        updateTable(tableSlotsB, val.TableA);
+                                                    }
+                                                    else {
+                                                        updateTable(tableSlotsA, val.TableA);
+                                                        updateTable(tableSlotsB, val.TableB);
+                                                    }
 
-                                                if (context.hp <= 0) {
-                                                    slot.lastChild.remove();
-                                                    slot.firstChild.remove();
+                                                    if (val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
+
+                                                    selectedMonster = null;
                                                 }
 
-                                                if (val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
+                                                if (val.turnEnds) endTurn(true);
+                                            });
 
-                                                selectedMonster = null;
-                                            }
-
-                                            if (val.turnEnds) endTurn(true);
-                                        });
+                                            
+                                        }
+                                        else {
+                                            postData(`/api/attack/${selectedMonster.index}/${i - 1}`).then(val => {
+                                                console.log(val);
+                                                if (val.canMove) {
+                                                    select();
+                                                    
+                                                    if (val.turnEnds) {
+                                                        updateTable(tableSlotsA, val.TableB);
+                                                        updateTable(tableSlotsB, val.TableA);
+                                                    }
+                                                    else {
+                                                        updateTable(tableSlotsA, val.TableA);
+                                                        updateTable(tableSlotsB, val.TableB);
+                                                    }
+    
+                                                    if (val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
+    
+                                                    selectedMonster = null;
+                                                }
+    
+                                                if (val.turnEnds) endTurn(true);
+                                            });
+                                        }
                                     }
                                     else if (tableSlotsA.includes(slot)) {
                                         if (selectedCard != null && !selectedCardContext.isMonster) {
                                             postData(`/api/equip/${selectedCardContext.index}/${i - 1}`).then(val => {
                                                 if (val.canMove) {
                                                     context.powers.push(selectedCardContext.powers[0]);
-                                                    console.log(selectedCardContext);
                                                     const tmp = selectedCard;
                                                     select();
                                                     tmp.remove();
@@ -307,6 +337,36 @@ window.addEventListener("load", () => {
                         break;
                     }
                 }
+            }
+        }
+    }
+
+    function updateTable(tableSlots, newValues) {
+        console.log(tableSlots);
+        for (let i = 0; i < tableSlots.length; i++) {
+
+            const slot = tableSlots[i];
+            const val  = newValues[i];
+
+            if (val === null) {
+                try {
+                    slot.firstChild.remove();
+                    slot.lastChild.remove();
+                }
+                catch {
+                    //do nothing
+                }
+            }
+
+            else {
+                const newHp = val.hp;
+                const oldHp = Number.parseInt(slot.querySelector(".progress-bar").innerText.match(/HP: [0-9]+/)[0].match(/[0-9]+/));
+                
+                const oldWidth = Number.parseInt(slot.querySelector(".progress-bar").style.width.slice(0, -1));
+                const newWidth = Math.min((newHp / ((100 * oldHp) / oldWidth)) * 100, 100) + "%";
+                
+                slot.querySelector(".progress-bar").innerText = `HP: ${newHp}|Attack: ${val.attack}`;
+                slot.querySelector(".progress-bar").style.width = newWidth;
             }
         }
     }
