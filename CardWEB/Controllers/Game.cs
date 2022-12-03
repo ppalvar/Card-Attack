@@ -11,7 +11,7 @@ public static class Game {
 
     public static string NewGame(string type, HttpContext request) {
         if (type == "human") {
-            match = new Match(MatchTypes.HumanVSHuman, 5, 5, 1);
+            match = new Match(MatchTypes.HumanVSHuman, 5, 5);
         }
         else if (type == "ai"){
             match = new Match(MatchTypes.ComputerVSHuman, 5, 5);
@@ -186,7 +186,7 @@ public static class Game {
                     MonsterCard? target = (MonsterCard?) match.enemy.Table[targetIndex];
                     if (target != null) {
                         try {
-                            match.UsePower(cardindex, power, target);
+                            response.turnEnds = match.UsePower(cardindex, power, target);
 
                             response.canMove = true;
                         }
