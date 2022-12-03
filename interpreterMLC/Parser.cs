@@ -25,7 +25,7 @@ public class Parser {
 
     private void EAT(SYMBOLS type) {
         if (this.CurrentToken.Type == type)this.CurrentToken = Lexer.GetNextToken();
-        else throw new Exception($"unexpected \'{this.CurrentToken.Content}\' in input");
+        else throw new Exception($"unexpected \'{this.CurrentToken.Content}\' in input (expected {type})");
     }
 
     private AST? Factor() {
@@ -381,7 +381,7 @@ public class Parser {
             return new MethodCall(token, param); 
         }
 
-        if (CurrentToken.Type == SYMBOLS.L_PAREN) {
+        if (CurrentToken.Type == SYMBOLS.DOT) {
             EAT(SYMBOLS.DOT);
 
             return new Method(token, Prop());

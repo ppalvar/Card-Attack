@@ -324,7 +324,7 @@ internal static class NodeVisitors {
             string Name = mNode.Name.Content;
 
             Type type = Context.GetType();
-            PropertyInfo? pf = type.GetProperty(Name);
+            PropertyInfo? pf = type.GetProperty(Name, BindingFlags.Instance | BindingFlags.NonPublic) ?? type.GetProperty(Name);
             if (pf != null){
                 object? val = pf.GetValue(Context);
                 if (mNode.Props != null){
@@ -349,7 +349,7 @@ internal static class NodeVisitors {
 
             Type type = Context.GetType();
             
-            MethodInfo? mf = type.GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo? mf = type.GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic) ?? type.GetMethod(name);
             if (mf != null) {
                 Callable methodCall = mf.CreateDelegate<Callable>(Context);
 
