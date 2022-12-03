@@ -147,11 +147,11 @@ public class Match{
         }
 
         for (int i = 0; i < player.Hand.Length; i++){
-            if (player.Hand[i] != null){
+            if (player.Hand[i] != null && player.Hand[i] is MonsterCard){
                 playerFlag = true;
             }
 
-            if (enemy.Hand[i] != null){
+            if (enemy.Hand[i] != null && enemy.Hand[i] is MonsterCard){
                 enemyFlag = true;
             }
         }
@@ -182,6 +182,7 @@ public class Match{
             }
         }
 
+        player.RemoveDeadMonsters();
         enemy.RemoveDeadMonsters();
 
         return AutoEndTurn();
@@ -193,9 +194,9 @@ public class Match{
     /// <param name="monsterIndex">The 0-starting index of the monster that will use a power</param>
     /// <param name="powerIndex">The 0-starting index of the power that will be used</param>
     /// <param name="target">The actual card, victim of the power</param>
-    public void UsePower(int monsterIndex, int powerIndex, MonsterCard target) {
+    public bool UsePower(int monsterIndex, int powerIndex, MonsterCard target) {
         if (monsterIndex >= player.Table.Length || powerIndex >= MonsterCard.MaxPowers) {
-            return;
+            return false;
         }
 
         if (UsedMonsters[monsterIndex])throw new Exception("this monster has been already used");
@@ -214,6 +215,8 @@ public class Match{
 
         player.RemoveDeadMonsters();
         enemy.RemoveDeadMonsters();
+
+        return AutoEndTurn();
     }
 
     /// <summary>
@@ -235,4 +238,18 @@ public class Match{
         EndTurn();
         return true;
     }
+
+    /**
+        This methods MUST have the format :
+            protected object MethodName(object param);
+        
+        they are used to modify the game state with code written in 
+        the MLC language, defined in ../interpreterMLC/Interpreter.cs
+    **/
+    #region State modifiers
+        protected object EndTurn(object empty) {
+            EndTurn();
+            return empty;
+        }
+    #endregion
 }

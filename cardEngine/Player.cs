@@ -112,17 +112,12 @@ public class Player{
         the MLC language, defined in ../interpreterMLC/Interpreter.cs
     **/
     #region State modifiers
-        protected object EndTurn(object empty) {
-            EndTurn();
-            return empty;
-        }
-
         protected object HandAt(object index) {
-             Card? monster = this.Hand[(int) index];
+            Card? monster = this.Hand[(int) index];
             if (monster != null) {
                 return monster;
             }
-            else return new Object();
+            else return new MonsterCard("None", "None", "None", 0, 0, 0, "Fire");
         }
 
         protected object TableAt(object index) {
@@ -130,7 +125,7 @@ public class Player{
             if (monster != null) {
                 return monster;
             }
-            else return new Object();
+            else return new MonsterCard("None", "None", "None", 0, 0, 0, "Fire");
         }
     #endregion
 }
