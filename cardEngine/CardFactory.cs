@@ -134,9 +134,7 @@ public class CardFactory{
                 if (requestedCards[i] is MonsterCard){
                     monsterCards[j++] = (Card) requestedCards[i].Clone();
                 }
-            }
-            
-            for (int i = 0; i < requestedCards.Length; i++){
+
                 if (requestedCards[i] is EffectCard){
                     cards[k++] = (Card) requestedCards[i].Clone();
                 }

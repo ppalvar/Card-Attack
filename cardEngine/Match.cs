@@ -198,7 +198,7 @@ public class Match{
             return;
         }
 
-        if (UsedMonsters[monsterIndex])return;
+        if (UsedMonsters[monsterIndex])throw new Exception("this monster has been already used");
 
         UsedMonsters[monsterIndex] = true;
 
@@ -211,6 +211,9 @@ public class Match{
                 power.UsePower(monsterCard, target, this);
             }
         }
+
+        player.RemoveDeadMonsters();
+        enemy.RemoveDeadMonsters();
     }
 
     /// <summary>

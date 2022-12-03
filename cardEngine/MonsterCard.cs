@@ -101,8 +101,9 @@ public class MonsterCard : Card{
             return this.HP;
         }
 
-        private void IncreaseAttack(object amount) {
+        private object IncreaseAttack(object amount) {
             this.AttackPoints += (int)amount;
+            return this.AttackPoints;
         }
 
         private object Kill(object live) {
