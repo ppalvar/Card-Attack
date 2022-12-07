@@ -117,7 +117,7 @@ public class Player{
             if (monster != null) {
                 return monster;
             }
-            else return new MonsterCard("None", "None", "None", 0, 0, 0, "Fire");
+            else return new MonsterCard("None", "None", "None", 0, 0, 0);
         }
 
         protected object TableAt(object index) {
@@ -125,7 +125,7 @@ public class Player{
             if (monster != null) {
                 return monster;
             }
-            else return new MonsterCard("None", "None", "None", 0, 0, 0, "Fire");
+            else return new MonsterCard("None", "None", "None", 0, 0, 0);
         }
     #endregion
 }

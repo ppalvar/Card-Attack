@@ -35,7 +35,7 @@ public class MonsterCard : Card{
     public bool IsDead{get{return !IsAlive;}private set {IsAlive = !value;}}
     #endregion
 
-    public MonsterCard(string Name, string Description, string Image, float  AppearingProbability, int AttackPoints, int HP, string element) : base(Name, Description, Image, AppearingProbability, element){
+    public MonsterCard(string Name, string Description, string Image, float  AppearingProbability, int AttackPoints, int HP) : base(Name, Description, Image, AppearingProbability){
         this.Name = Name;
         this.HP = HP;
         this.AttackPoints = AttackPoints;
@@ -47,7 +47,7 @@ public class MonsterCard : Card{
         IsAlive = true;
     }
 
-    public MonsterCard(MonsterCardJsonItem args) : base(args.name, args.description, args.image, args.appearingProbability, args.element){
+    public MonsterCard(MonsterCardJsonItem args) : base(args.name, args.description, args.image, args.appearingProbability){
         this.Name = args.name;
         this.HP = args.hp;
         this.AttackPoints = args.attack;

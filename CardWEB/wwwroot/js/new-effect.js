@@ -11,22 +11,20 @@ window.addEventListener("load", () => {
 
     createBtn.addEventListener("click", () => {
         //retrieve data
-        const code = editorEl1.children[2].innerText;
+        const code = editor1.getSession().getValue();
         const image = document.getElementById("img-frame").src.split('/')[4];
         const name = document.getElementById("card-name").value;
-        const element = document.getElementById("card-element").value;
         const description = document.getElementById("card-description").value;
         const aProb = Number.parseFloat(document.getElementById("card-probability").value);
 
         //validate data
-        if (!Number.isNaN(aProb) && image !== "" && name !== "" && element !=="") {
+        if (!Number.isNaN(aProb) && image !== "" && name !== "") {
             try {
                 let response = postData("/api/new-effect-card", {
                     name : name,
                     description : description,
                     image : image,
                     appearingProbability : aProb,
-                    element : element,
                     powerName : name,
                     powerCode : code,
                 });

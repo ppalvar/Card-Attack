@@ -155,6 +155,8 @@ window.addEventListener("load", () => {
         }
         if (node == null || node === selectedCard) {
             selectedCard = null;
+            selectedMonster = null;
+            selectedPower = null;
             showInfo();
             return;
         }

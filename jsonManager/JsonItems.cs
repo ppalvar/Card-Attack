@@ -10,14 +10,12 @@ public abstract class CardJsonItem{
     public string description{ get; set; }
     public string image{get;set;}
     public float appearingProbability{get;set;}
-    public string element{get;set;}
         
-    public CardJsonItem(string name, string description, string image, float appearingProbability, string element){
+    public CardJsonItem(string name, string description, string image, float appearingProbability){
         this.name = name;
         this.image = image;
         this.description = description;
         this.appearingProbability = appearingProbability;
-        this.element = element;
     }
 
     public override string ToString()
@@ -37,9 +35,8 @@ public class MonsterCardJsonItem : CardJsonItem{
                            string description,
                            string image,
                            float appearingProbability,
-                           string element,
                            int attack,
-                           int hp) : base(name, description, image, appearingProbability, element)
+                           int hp) : base(name, description, image, appearingProbability)
     {
         this.attack = attack;
         this.hp = hp;
@@ -58,9 +55,8 @@ public class EffectCardJsonItem : CardJsonItem{
                            string description,
                            string image,
                            float appearingProbability,
-                           string element,
                            string powerName,
-                           string PowerCode) : base(name, description, image, appearingProbability, element)
+                           string PowerCode) : base(name, description, image, appearingProbability)
     {
         this.powerName = powerName;
         this.powerCode = PowerCode;

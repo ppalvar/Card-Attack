@@ -11,11 +11,11 @@ using Powers;
 public class EffectCard : Card{
     public Power power{get;private set;}
 
-    public EffectCard(string Name, string Description, string Image, float AppearingProbability, string element, Power power) : base(Name, Description, Image, AppearingProbability, element){
+    public EffectCard(string Name, string Description, string Image, float AppearingProbability, Power power) : base(Name, Description, Image, AppearingProbability){
         this.power = power;
     }
 
-    public EffectCard(EffectCardJsonItem args) : base(args.name, args.description, args.image, args.appearingProbability, args.element){
+    public EffectCard(EffectCardJsonItem args) : base(args.name, args.description, args.image, args.appearingProbability){
         Power? tmp = new Power(args.powerName, args.powerCode);
 
         if (tmp != null) this.power = tmp;

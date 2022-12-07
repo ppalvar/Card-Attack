@@ -6,7 +6,6 @@ window.addEventListener("load", () => {
         const image = document.getElementById("img-frame").src.split('/')[4];
         const name = document.getElementById("card-name").value;
         const description = document.getElementById("card-description").value;
-        const element = document.getElementById("card-element").value;
         const aProb = Number.parseFloat(document.getElementById("card-probability").value);
         const hp = Number.parseInt(document.getElementById("monster-hp").value);
         const attack = Number.parseInt(document.getElementById("monster-attack").value);
@@ -14,14 +13,13 @@ window.addEventListener("load", () => {
         // console.log(`Img:${image}\nName:${name}\nElement:${element}\nProb:${aProb}\nHP:${hp}\nAttack:${attack}`);
 
         //validate info
-        if (Number.isInteger(hp) && Number.isInteger(attack) && !Number.isNaN(aProb) && image !== "" && name !== "" && element !== "") {
+        if (Number.isInteger(hp) && Number.isInteger(attack) && !Number.isNaN(aProb) && image !== "" && name !== "") {
             try {
                 let response = postData("/api/new-monster-card", {
                     name : name,
                     description : description,
                     image : image,
                     appearingProbability : aProb,
-                    element : element,
                     attack : attack,
                     hp : hp,
                 });

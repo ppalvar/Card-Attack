@@ -55,7 +55,7 @@ public class CardFactory{
             MonsterCard? m = args as MonsterCard;
 
             if (m!= null){
-                MonsterCardJsonItem tmp = new MonsterCardJsonItem(m.Name, m.Description, m.Image, m.AppearingProbability,m.element.Type, m.AttackPoints, m.HP);
+                MonsterCardJsonItem tmp = new MonsterCardJsonItem(m.Name, m.Description, m.Image, m.AppearingProbability, m.AttackPoints, m.HP);
                 if (MonsterReader != null && MonsterReader.Content != null){
                     MonsterReader.Add(tmp);
                     if (this.CardOptions != null){
@@ -69,7 +69,7 @@ public class CardFactory{
             EffectCard? m = args as EffectCard;
 
             if (m!= null){
-                EffectCardJsonItem tmp = new EffectCardJsonItem(m.Name, m.Description, m.Image, m.AppearingProbability, m.element.Type, m.power.Name, m.power.PowerCode);
+                EffectCardJsonItem tmp = new EffectCardJsonItem(m.Name, m.Description, m.Image, m.AppearingProbability, m.power.Name, m.power.PowerCode);
                 if (EffectReader != null && EffectReader.Content != null){
                     EffectReader.Add(tmp);
                     if (this.CardOptions != null){
