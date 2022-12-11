@@ -1,59 +1,83 @@
 namespace Cards;
 
 using System;
-using JsonItems;
+using CardJsonItems;
 using Powers;
 
 /// <summary>
-/// Cartas monstruo: estas se colocan en el campo
-/// y pueden atacar directamente los monstruos enemigos
+/// Monster cards: this can be placed in the table, attack other monster cards,
+/// take powers from Effect cards and use them
 /// </summary>
-public class MonsterCard : Card{
-    #region Modifiers
-
+public class MonsterCard : Card
+{
     /// <summary>
-    /// The damage this monster makes to it's enemies
+    /// The damage this monster makes to it's enemies. Minimum attack will be zero
     /// </summary>
-    /// <value>Integer(if < 0, then it heals)</value>
-    public int AttackPoints{get;private set;}
+    public int AttackPoints
+    {
+        get
+        {
+            return _AttackPoints;
+        }
+        private set
+        {
+            _AttackPoints = value > 0 ? value : 0;
+        }
+    }
+    private int _AttackPoints;
 
     /// <summary>
     /// The life points the monster haves
     /// </summary>
     /// <value>Non-negative integer</value>
-    public int HP{get;set;}
+    public int HP { get; private set; }
 
     /// <summary>
     /// The power set of a monster
     /// </summary>
-    public Power?[] Powers{get;private set;}//Now it only assigns max 3 powers
-    private bool[] AssignedPowers{get;set;}
+    public Power?[] Powers { get; private set; }//Now it only assigns max 3 powers
 
+    /// <summary>
+    /// The maximum number of powers a monster can have
+    /// </summary>
     public const int MaxPowers = 3;
 
-    public bool IsAlive{get;private set;}
-    public bool IsDead{get{return !IsAlive;}private set {IsAlive = !value;}}
-    #endregion
 
-    public MonsterCard(string Name, string Description, string Image, float  AppearingProbability, int AttackPoints, int HP) : base(Name, Description, Image, AppearingProbability){
+    public bool IsAlive { get; private set; }
+    public bool IsDead { get { return !IsAlive || HP <= 0; } private set { IsAlive = !value; } }
+
+    /// <summary>
+    /// Creates a new Monster card. It will be only for instance and will NOT be 
+    /// saved in the disk
+    /// </summary>
+    /// <param name="Name">The name of the card</param>
+    /// <param name="Description">A brief description</param>
+    /// <param name="Image">The name or address of an image</param>
+    /// <param name="AppearingProbability">How likely is this card to appear</param>
+    /// <param name="AttackPoints">The damage it makes to other monsters</param>
+    /// <param name="HP">The amount of life this monster will have</param>
+    public MonsterCard(string Name, string Description, string Image, float AppearingProbability, int AttackPoints, int HP) : base(Name, Description, Image, AppearingProbability)
+    {
         this.Name = Name;
         this.HP = HP;
         this.AttackPoints = AttackPoints;
 
-        // Type T_Element = this.element.GetType();
-
         Powers = new Power[MaxPowers];
-        AssignedPowers = new bool[MaxPowers];
         IsAlive = true;
     }
 
-    public MonsterCard(MonsterCardJsonItem args) : base(args.name, args.description, args.image, args.appearingProbability){
+    /// <summary>
+    /// Creates a new Monster card. It will be only for instance and will NOT be 
+    /// saved in the disk
+    /// </summary>
+    /// <param name="args">A JsonItem with all the data needed</param>
+    public MonsterCard(MonsterCardJsonItem args) : base(args.name, args.description, args.image, args.appearingProbability)
+    {
         this.Name = args.name;
         this.HP = args.hp;
         this.AttackPoints = args.attack;
 
         Powers = new Power[MaxPowers];
-        AssignedPowers = new bool[MaxPowers];
         IsAlive = true;
     }
 
@@ -61,10 +85,12 @@ public class MonsterCard : Card{
     /// Attack phisically a monster
     /// </summary>
     /// <param name="target">A monster card</param>
-    public void Attack(MonsterCard target){
+    private void Attack(MonsterCard target)
+    {
         target.HP = target.HP - this.AttackPoints;
 
-        if (target.HP <= 0){
+        if (target.HP <= 0)
+        {
             target.IsAlive = false;
         }
     }
@@ -73,13 +99,14 @@ public class MonsterCard : Card{
     /// Equips a power to this monster. The powers are not removable
     /// and are limited by the MaxPowers constant.
     /// </summary>
-    /// <param name="power"></param>
-    public void AssignPower(Power power){
-        for (int i = 0; i < this.Powers.Length; i++){
-            if (!AssignedPowers[i]){
-                Powers[i] = power;
-                AssignedPowers[i] = true;
-                return;
+    /// <param name="power">A Power object instance</param>
+    public void AssignPower(Power power)
+    {
+        for (int i = 0; i < this.Powers.Length; i++)
+        {
+            if (Powers[i] == null)
+            {
+                Powers[i] = power; return;
             }
         }
 
@@ -94,21 +121,24 @@ public class MonsterCard : Card{
         the MLC language, defined in ../interpreterMLC/Interpreter.cs
     **/
     #region State modifiers
-        private object IncreaseHP(object amount) {
-            this.HP += (int)amount;
-            if (this.HP <= 0)this.IsAlive = false;
+    private object IncreaseHP(object amount)
+    {
+        this.HP += (int)amount;
+        if (this.HP <= 0) this.IsAlive = false;
 
-            return this.HP;
-        }
+        return this.HP;
+    }
 
-        private object IncreaseAttack(object amount) {
-            this.AttackPoints += (int)amount;
-            return this.AttackPoints;
-        }
+    private object IncreaseAttack(object amount)
+    {
+        this.AttackPoints += (int)amount;
+        return this.AttackPoints;
+    }
 
-        private object Kill(object live) {
-            this.IsAlive = (bool) live;
-            return live;
-        }
+    private object Kill(object live)
+    {
+        this.IsAlive = (bool)live;
+        return live;
+    }
     #endregion
 }

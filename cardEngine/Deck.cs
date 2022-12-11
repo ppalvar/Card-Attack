@@ -1,33 +1,57 @@
 namespace CardFactorys;
 
-using  System;
+using System;
 using Cards;
 
 
 /// <summary>
-/// El mazo de cartas del jugador
+/// The deck of cards a player will have
 /// </summary>
-public class Deck{
-    private Card[] deckCards;
+public class Deck
+{
+    /// <summary>
+    /// The cards in the deck
+    /// </summary>
+    private Card[] DeckCards { get; set; }
 
-    public Card[] DeckCards{
-        get{return deckCards;}
-        private set{deckCards = value;}
+    public bool HasCards
+    {
+        get { return DeckCards.Length != 0; }
     }
 
-    public Deck(Card[] cards){
-        this.DeckCards = this.deckCards = cards;
+    public bool HasMonsters
+    {
+        get
+        {
+            foreach (var c in DeckCards)
+            {
+                if (c != null && c is MonsterCard) return true;
+            }
+            return false;
+        }
     }
 
-    private Card GetCard(ref Card[] cards){
+    public Deck(Card[] cards)
+    {
+        this.DeckCards = cards;
+    }
+
+    /// <summary>
+    /// Gets a randomized card from the deck
+    /// </summary>
+    /// <returns>A random card</returns>
+    public Card Draw()
+    {
         Random rand = new Random();
-        int p = rand.Next(0, cards.Length);
+        int p = rand.Next(0, this.DeckCards.Length);
 
-        Card tmp = cards[p];
+        Card tmp = this.DeckCards[p];
 
         bool flag = true;
-        cards = cards.Where(val => {
-            if (val == tmp && flag){
+        this.DeckCards = this.DeckCards.Where(val =>
+        {
+            if (val == tmp && flag)
+            {
                 flag = false;
                 return false;
             }
@@ -35,11 +59,5 @@ public class Deck{
         }).ToArray();
 
         return tmp;
-    }
-
-    public Card Draw(){
-        if (this.deckCards != null)
-            return GetCard(ref this.deckCards);
-        else throw new NullReferenceException();
     }
 }

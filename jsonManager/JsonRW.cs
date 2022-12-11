@@ -2,15 +2,14 @@ namespace JsonRW;
 
 using System;
 using System.Text.Json;
-
+using JsonItems;
 
 /// <summary>
 /// Lector/escritor simple de Json's
 /// siempre lee archivos que tengan formato Lista
 /// </summary>
 /// <typeparam name="T">tipo de dato de lectura para cada elemento</typeparam>
-public class JsonRW<T>
-{
+public class JsonRW<T> where T : IJsonItem {
     public List<T>? Content { get; set; }
     private string filePath { get; set; }
 
@@ -51,6 +50,9 @@ public class JsonRW<T>
         Save();
     }
 
+    /// <summary>
+    /// Saves the content of the object to disk
+    /// </summary>
     private void Save()
     {
         if (this.Content is null) return;
