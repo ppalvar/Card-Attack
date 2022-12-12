@@ -37,7 +37,22 @@ public class Power
 
         MatchState state = new MatchState(card, target, match);
 
-        interpreter.Interpret(this.PowerCode, state);
+        try
+        {
+            var task = Task.Run(() =>
+            {
+                interpreter.Interpret(this.PowerCode, state);
+            });
+
+
+            task.Wait(TimeSpan.FromMilliseconds(3000));
+        }
+        catch
+        {
+            // if the code of the power crashes will be silently and the match will continue
+            // some values of the match may be modified even if it crashes
+            // to avoid this write high quality code for your cards ;)
+        }
     }
 }
 
