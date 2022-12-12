@@ -149,7 +149,7 @@ public class Match
     /// </summary>
     /// <param name="card">The card you wanna play</param>
     /// <param name="target">The card on wich you wanna equip the power (EffectCard only)</param>
-    public void Play(int card, MonsterCard? target)
+    public void Play(int card, MonsterCard? target=null)
     {
         player.Play(card, target);
     }

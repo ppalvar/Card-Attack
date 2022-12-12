@@ -200,7 +200,7 @@ public class Player
 
         if (PlayerDeck != null)
         {
-            flag = !PlayerDeck.HasMonsters;
+            flag = PlayerDeck.HasMonsters;
 
             foreach (Card? card in this.Hand)
             {
