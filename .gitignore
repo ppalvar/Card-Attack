@@ -3,7 +3,6 @@
 .mono
 bin
 obj
-Images
 Fonts
 *.import
 *.txt
