@@ -133,12 +133,12 @@ public class Match
     /// </summary>
     public void EndTurn()
     {
-        player.EndTurn();
-        enemy.BeginTurn(this);
-
         Player tmp = this.player;
         this.player = this.enemy;
         this.enemy = tmp;
+
+        enemy.EndTurn();
+        player.BeginTurn(this);
 
         this.TurnCounter++;
     }
