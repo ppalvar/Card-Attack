@@ -27,7 +27,7 @@ public static class Game
         }
         else if (type == "ai")
         {
-            match = new Match(MatchTypes.ComputerVSHuman, 5, 5);
+            match = new Match(MatchTypes.ComputerVSHuman, 5, 5, 0);
         }
 
         string json = CardCreator.GetJSON(request.Request.Body);
@@ -78,6 +78,30 @@ public static class Game
         if (match == null) throw new Exception("there is no match yet");
 
         if (!auto) match.EndTurn();
+
+        if (match.enemy is Players.VirtualPlayer vPlayer && !auto) {Console.WriteLine(match.enemy);
+            ActionResponse response = new ActionResponse(true, true, match.Winner() != null);
+
+            response.TableA = new CardResponse[match.player.Table.Length];
+            response.TableB = new CardResponse[match.player.Table.Length];
+
+            for (int j = 0; j < match.player.Table.Length; j++)
+            {
+                MonsterCard? p = (MonsterCard?)match.player.Table[j];
+                MonsterCard? e = (MonsterCard?)match.enemy.Table[j];
+
+                if (p != null)
+                {
+                    response.TableA[j] = new CardResponse(p, j);
+                }
+                if (e != null)
+                {
+                    response.TableB[j] = new CardResponse(e, j);
+                }
+            }
+            
+            return JsonSerializer.Serialize(response);
+        }
 
         List<CardResponse> responseBody = new List<CardResponse>();
 
