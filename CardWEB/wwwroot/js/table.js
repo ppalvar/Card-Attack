@@ -293,7 +293,6 @@ window.addEventListener("load", () => {
                                         }
                                         else {
                                             postData(`/api/attack/${selectedMonster.index}/${i - 1}`).then(val => {
-                                                console.log(val);
                                                 if (val.canMove) {
                                                     select();
                                                     
@@ -344,7 +343,6 @@ window.addEventListener("load", () => {
     }
 
     function updateTable(tableSlots, newValues) {
-        console.log(tableSlots);
         for (let i = 0; i < tableSlots.length; i++) {
 
             const slot = tableSlots[i];
@@ -358,6 +356,51 @@ window.addEventListener("load", () => {
                 catch {
                     //do nothing
                 }
+            }
+
+            else if (slot.children.length == 0) {
+                const node = document.createElement("div");
+                node.id = `${slot.id}-${i}`;
+                node.classList.add("px-0", "py-0");
+                node.innerHTML = `<div name="card" class="card px-0 py-0">
+                                        <img src="/img/front.png" id="card-img" alt="background" class="card-image"
+                                        style="background-color: rgb(146, 139, 65);">
+                                        <h6 class="card-title ">${val.name}</h6>
+                                        <img src="/img/${val.image}" alt="pollo" class="card-picture">
+                                        <p class="card-description">${val.description}</p>
+                                    </div>`;
+                
+                const progress = document.createElement("div");
+                progress.classList.add("progress", "my-1");
+                progress.innerHTML = `<div class="progress-bar progress-bar-animated progress-bar-striped bg-success" style="width:100%;color:black;overflow:visible;">HP: ${val.hp}|Attack: ${val.attack}</div>`;
+                
+                node.onclick = () => {
+                    if (selectedMonster !== null) {
+                        postData(`/api/attack/${selectedMonster.index}/${val.index}`).then(_val => {
+                            if (_val.canMove) {
+                                select();
+                                
+                                if (_val.turnEnds) {
+                                    updateTable(tableSlotsA, _val.TableB);
+                                    updateTable(tableSlotsB, _val.TableA);
+                                }
+                                else {
+                                    updateTable(tableSlotsA, _val.TableA);
+                                    updateTable(tableSlotsB, _val.TableB);
+                                }
+
+                                if (_val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
+
+                                selectedMonster = null;
+                            }
+
+                            if (_val.turnEnds) endTurn(true);
+                        });
+                    }
+                };
+
+                slot.appendChild(progress);
+                slot.appendChild(node);
             }
 
             else {
@@ -374,9 +417,11 @@ window.addEventListener("load", () => {
     }
 
     function endTurn(auto = false) {
-        for (let slot of cardSlotsA) {
-            flipReverseAnimation(slot);
-            setTimeout(() => slot.classList.add("d-none"), 400);
+        if (matchType !== "ai") {
+            for (let slot of cardSlotsA) {
+                flipReverseAnimation(slot);
+                setTimeout(() => slot.classList.add("d-none"), 400);
+            }
         }
 
         let tmp = cardSlotsA;
@@ -390,12 +435,25 @@ window.addEventListener("load", () => {
         if (currentPlayer == "player A") currentPlayer = "player B";
         else currentPlayer = "player A";
 
-        for (let slot of cardSlotsA) {
-            slot.classList.remove("d-none");
+        if (matchType !== "ai") {
+            for (let slot of cardSlotsA) {
+                slot.classList.remove("d-none");
+            }
+        }
+        
+        if (matchType === "ai" && currentPlayer === "player B" && !auto) {
+            postData((`/api/new-turn/${auto}`)).then(val => {
+                updateTable(tableSlotsA, val.TableA);
+                updateTable(tableSlotsB, val.TableB);
+            });
+            endTurn(true);
+            
+        }
+        else {
+            playerHand = postData(`/api/new-turn/${auto}`);
+            showCards(playerHand);
         }
 
-        playerHand = postData(`/api/new-turn/${auto}`, { turnEnds: true });
-        showCards(playerHand);
         select();
     }
 
