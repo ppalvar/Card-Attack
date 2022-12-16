@@ -11,6 +11,7 @@
     margin: 0;
     max-width: fit-content;
     max-height: fit-content;
+    cursor:pointer;
 
     transition: transform 250ms;
 }
@@ -197,10 +198,9 @@
     min-width: 20em;
     max-width: 20em;
     
-    background-color: rgba(255, 255, 255, 0.493);
+    background-color: rgba(255, 255, 255, 0.331);
     margin: 2em;
-    border-radius: 6px;
-    border: solid 2px rgba(40, 53, 38, 0.84);
+    border-radius: 3px;
 }
 
 @keyframes flip {

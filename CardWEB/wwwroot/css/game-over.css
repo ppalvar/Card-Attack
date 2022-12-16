@@ -39,6 +39,7 @@
     border: solid rgb(30, 29, 29) 2px;
     width: 10em;
     padding: 10px 0;
+    cursor:pointer;
 
     transition: transform 250ms;
 }
