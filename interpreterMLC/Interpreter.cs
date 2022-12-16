@@ -22,7 +22,7 @@ public class Interpreter
         AST? Tree = Parser.Parse();
         try
         {
-            NodeVisitor.Visit(Tree, Context);
+            NodeVisitor.Visit(Tree, Context, true);
         }
         catch (Exception e)
         {

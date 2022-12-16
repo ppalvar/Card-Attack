@@ -20,8 +20,14 @@ internal static class NodeVisitor
     /// <returns>An object on ANY type</returns>
     private delegate object Visitor(AST? Node, object Context);
 
-    public static object Visit(AST? Node, object Context)
+    public static object? GlobalContext{get;private set;}
+
+    public static object Visit(AST? Node, object Context, bool isGlobal=false)
     {
+        if (isGlobal) {
+            GlobalContext = Context;
+        }
+
         Assembly assembly = Assembly.GetExecutingAssembly();
         Type type = assembly.GetTypes().
                              Where(val => val.Name == nameof(NodeVisitors)).
@@ -518,12 +524,12 @@ internal static class NodeVisitors
     /// <returns>An object on ANY type</returns>
     public static object VisitMethodCall(AST? Node, object Context)
     {
-        if (Node != null)
+        if (Node != null && NodeVisitor.GlobalContext != null)
         {
             MethodCall mNode = (MethodCall)Node;
 
             string name = mNode.Method.Content;
-            object param = NodeVisitor.Visit(mNode.Param, Context);
+            object param = NodeVisitor.Visit(mNode.Param, NodeVisitor.GlobalContext);
 
             Type type = Context.GetType();
 
