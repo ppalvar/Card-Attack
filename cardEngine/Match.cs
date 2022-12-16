@@ -193,6 +193,15 @@ public class Match
     }
 
     /// <summary>
+    /// Drops a card from the current player's hand
+    /// </summary>
+    /// <param name="cardIndex">The index in the hand of the card you wanna drop</param>
+    public void DropCard(int cardIndex)
+    {
+        player.DropCard(cardIndex);
+    }
+
+    /// <summary>
     /// Decides if there is a winner.
     /// A player wins when the other loses.
     /// A player loses when they lost all their cards
