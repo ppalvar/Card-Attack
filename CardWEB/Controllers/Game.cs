@@ -27,7 +27,7 @@ public static class Game
         }
         else if (type == "ai")
         {
-            match = new Match(MatchTypes.ComputerVSHuman, 5, 5, 0);
+            match = new Match(MatchTypes.ComputerVSHuman, 5, 5, 10);
         }
 
         string json = CardCreator.GetJSON(request.Request.Body);
@@ -79,44 +79,42 @@ public static class Game
 
         if (!auto) match.EndTurn();
 
-        if (match.enemy is Players.VirtualPlayer vPlayer && !auto) {Console.WriteLine(match.enemy);
-            ActionResponse response = new ActionResponse(true, true, match.Winner() != null);
+        ActionResponse response = new ActionResponse(true, true, match.Winner() != null);
 
-            response.TableA = new CardResponse[match.player.Table.Length];
-            response.TableB = new CardResponse[match.player.Table.Length];
+        response.TableA = new CardResponse[match.player.Table.Length];
+        response.TableB = new CardResponse[match.player.Table.Length];
 
-            for (int j = 0; j < match.player.Table.Length; j++)
+        for (int j = 0; j < match.player.Table.Length; j++)
+        {
+            MonsterCard? p = (MonsterCard?)match.player.Table[j];
+            MonsterCard? e = (MonsterCard?)match.enemy.Table[j];
+
+            if (p != null)
             {
-                MonsterCard? p = (MonsterCard?)match.player.Table[j];
-                MonsterCard? e = (MonsterCard?)match.enemy.Table[j];
-
-                if (p != null)
-                {
-                    response.TableA[j] = new CardResponse(p, j);
-                }
-                if (e != null)
-                {
-                    response.TableB[j] = new CardResponse(e, j);
-                }
+                response.TableA[j] = new CardResponse(p, j);
             }
-            
-            return JsonSerializer.Serialize(response);
+            if (e != null)
+            {
+                response.TableB[j] = new CardResponse(e, j);
+            }
         }
 
-        List<CardResponse> responseBody = new List<CardResponse>();
+        if (match.enemy is Players.VirtualPlayer vPlayer) response.MovementLog = vPlayer.MovementLog.ToArray();
 
-        int i = 0;
+        response.Hand = new CardResponse[match.player.Hand.Length];
+
+        int i = 0, k = 0;
         foreach (Cards.Card? c in match.player.Hand)
         {
             if (c != null)
             {
                 CardResponse r = new CardResponse(c, i);
-                responseBody.Add(r);
+                response.Hand[k++] = r;
             }
             i++;
         }
 
-        string jsonResponse = JsonSerializer.Serialize(responseBody);
+        string jsonResponse = JsonSerializer.Serialize(response);
 
         return jsonResponse;
     }

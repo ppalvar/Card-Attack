@@ -66,6 +66,8 @@ public class ActionResponse {
     public CardResponse?[]? TableA{get;set;}
     public CardResponse?[]? TableB{get;set;}
 
+    public string?[]? MovementLog{get;set;}
+
     public ActionResponse(bool canMove, bool turnEnds, bool gameEnds) {
         this.canMove = canMove;
         this.turnEnds = turnEnds;

@@ -113,7 +113,6 @@ window.addEventListener("load", () => {
                     const color = !val[i].isMonster ? "rgb(117, 64, 164)" : "rgb(146, 139, 65)";
 
                     const node = document.createElement("div");
-                    node.id = `${slot.id}-${i}`;
                     node.classList.add("px-0", "py-0");
                     node.innerHTML = `<div name="card" class="card">
                                             <img src="/img/front.png" id="card-img" alt="background" class="card-image"
@@ -147,6 +146,8 @@ window.addEventListener("load", () => {
 
     function select(node=null, context=null) {
         selectedPower = null;
+
+        document.getElementById("movement-log").innerHTML = "";
 
         showInfo(context, node);
         
@@ -360,7 +361,6 @@ window.addEventListener("load", () => {
 
             else if (slot.children.length == 0) {
                 const node = document.createElement("div");
-                node.id = `${slot.id}-${i}`;
                 node.classList.add("px-0", "py-0");
                 node.innerHTML = `<div name="card" class="card px-0 py-0">
                                         <img src="/img/front.png" id="card-img" alt="background" class="card-image"
@@ -376,26 +376,52 @@ window.addEventListener("load", () => {
                 
                 node.onclick = () => {
                     if (selectedMonster !== null) {
-                        postData(`/api/attack/${selectedMonster.index}/${val.index}`).then(_val => {
-                            if (_val.canMove) {
-                                select();
-                                
-                                if (_val.turnEnds) {
-                                    updateTable(tableSlotsA, _val.TableB);
-                                    updateTable(tableSlotsB, _val.TableA);
+                        if (selectedPower != null) {
+                            postData(`/api/use-power/${selectedMonster.index}/${val.index}/${selectedPower}`).then(_val => {
+                                if (_val.canMove) {
+                                    select();
+                                    
+                                    if (_val.turnEnds) {
+                                        updateTable(tableSlotsB, _val.TableB);
+                                        updateTable(tableSlotsA, _val.TableA);
+                                    }
+                                    else {
+                                        updateTable(tableSlotsA, _val.TableA);
+                                        updateTable(tableSlotsB, _val.TableB);
+                                    }
+
+                                    if (val.MovementLog != null) document.getElementById("movement-log").innerHTML =  `<p>${val.MovementLog.join("<br>")}</p>`;
+    
+                                    if (_val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
+    
+                                    selectedMonster = null;
                                 }
-                                else {
-                                    updateTable(tableSlotsA, _val.TableA);
-                                    updateTable(tableSlotsB, _val.TableB);
+                            });
+                        }
+                        else {
+                            postData(`/api/attack/${selectedMonster.index}/${val.index}`).then(_val => {
+                                if (_val.canMove) {
+                                    select();
+                                    
+                                    if (_val.turnEnds) {
+                                        updateTable(tableSlotsB, _val.TableB);
+                                        updateTable(tableSlotsA, _val.TableA);
+                                    }
+                                    else {
+                                        updateTable(tableSlotsA, _val.TableA);
+                                        updateTable(tableSlotsB, _val.TableB);
+                                    }
+
+                                    if (val.MovementLog != null) document.getElementById("movement-log").innerHTML =  `<p>${val.MovementLog.join("<br>")}</p>`;
+    
+                                    if (_val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
+    
+                                    selectedMonster = null;
                                 }
-
-                                if (_val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
-
-                                selectedMonster = null;
-                            }
-
-                            if (_val.turnEnds) endTurn(true);
-                        });
+    
+                                if (_val.turnEnds) endTurn(true);
+                            });
+                        }
                     }
                 };
 
@@ -422,36 +448,38 @@ window.addEventListener("load", () => {
                 flipReverseAnimation(slot);
                 setTimeout(() => slot.classList.add("d-none"), 400);
             }
-        }
-
-        let tmp = cardSlotsA;
-        cardSlotsA = cardSlotsB;
-        cardSlotsB = tmp;
-
-        tmp = tableSlotsA;
-        tableSlotsA = tableSlotsB;
-        tableSlotsB = tmp;
-
-        if (currentPlayer == "player A") currentPlayer = "player B";
-        else currentPlayer = "player A";
-
-        if (matchType !== "ai") {
+            
+            let tmp = cardSlotsA;
+            cardSlotsA = cardSlotsB;
+            cardSlotsB = tmp;
+    
+            tmp = tableSlotsA;
+            tableSlotsA = tableSlotsB;
+            tableSlotsB = tmp;
+    
+            if (currentPlayer == "player A") currentPlayer = "player B";
+            else currentPlayer = "player A";
+            
             for (let slot of cardSlotsA) {
                 slot.classList.remove("d-none");
             }
         }
         
-        if (matchType === "ai" && currentPlayer === "player B" && !auto) {
-            postData((`/api/new-turn/${auto}`)).then(val => {
+        if (matchType === "ai" && !auto) {
+            postData((`/api/new-turn/${auto}`)).then(val => {console.log(val);
                 updateTable(tableSlotsA, val.TableA);
                 updateTable(tableSlotsB, val.TableB);
+                showCards(new Promise((onResolve) => {onResolve(val.Hand)}), false);
+                
+                document.getElementById("movement-log").innerHTML =  `<p>${val.MovementLog.join("<br>")}</p>`;
+
+                if (val.gameEnds)window.location.replace("/game-over/Player B");
             });
-            endTurn(true);
-            
         }
         else {
-            playerHand = postData(`/api/new-turn/${auto}`);
-            showCards(playerHand);
+            postData(`/api/new-turn/${auto}`).then (val => {
+                showCards(new Promise((onResolve) => {onResolve(val.Hand)}));
+            });
         }
 
         select();
