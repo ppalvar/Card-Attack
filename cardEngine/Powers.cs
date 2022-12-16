@@ -47,8 +47,10 @@ public class Power
 
             task.Wait(TimeSpan.FromMilliseconds(3000));
         }
-        catch
+        catch (Exception e)
         {
+            Console.WriteLine(e.Message);
+            
             // if the code of the power crashes will be silently and the match will continue
             // some values of the match may be modified even if it crashes
             // to avoid this write high quality code for your cards ;)
