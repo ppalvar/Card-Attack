@@ -155,16 +155,16 @@ public class Lexer
             #endregion
 
             #region Booleans
-            if (GetSubText("True".Length) == "True")
+            if (GetSubText("true".Length) == "true")
             {
-                Advance("True".Length);
-                return new Token(SYMBOLS.TRUE, "True");
+                Advance("true".Length);
+                return new Token(SYMBOLS.TRUE, "true");
             }
 
-            if (GetSubText("False".Length) == "False")
+            if (GetSubText("false".Length) == "false")
             {
-                Advance("False".Length);
-                return new Token(SYMBOLS.FALSE, "False");
+                Advance("false".Length);
+                return new Token(SYMBOLS.FALSE, "false");
             }
             #endregion
 
