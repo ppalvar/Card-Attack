@@ -266,16 +266,6 @@ public class Player
         the MLC language, defined in ../interpreterMLC/Interpreter.cs
     **/
     #region State modifiers
-    protected object HandAt(object index)
-    {
-        Card? monster = this.Hand[(int)index];
-        if (monster != null)
-        {
-            return monster;
-        }
-        else return new MonsterCard("None", "None", "None", 0, 0, 0);
-    }
-
     protected object TableAt(object index)
     {
         MonsterCard? monster = this.Table[(int)index];
