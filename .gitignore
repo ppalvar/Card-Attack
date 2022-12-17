@@ -7,4 +7,5 @@ Fonts
 *.import
 *.txt
 *.ttf
+*.py
 pdfs

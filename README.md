@@ -58,7 +58,7 @@ If you select **Effect Card** will be displayed something like this:
 
 The process is pretty similar to the one above. The only difference is that you **must** code an hability using the *MLC* language. For more info about it click [here](SYNTAX.md).
 
-## How to select my deck?
+### How to select my deck?
 
 From the main menu click in the **Select Deck** button.
 
