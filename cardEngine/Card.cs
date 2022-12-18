@@ -47,7 +47,7 @@ public abstract class Card : ICloneable
     /// Makes a shallow copy of this card
     /// </summary>
     /// <returns>`Object` type instance (must be casted!)</returns>
-    public object Clone()
+    public virtual object Clone()
     {
         return this.MemberwiseClone();
     }

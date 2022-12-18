@@ -108,9 +108,27 @@ public class MonsterCard : Card
             {
                 Powers[i] = power; return;
             }
+            else
+            {
+                // do nothing
+            }
         }
 
         throw new Exception("the maximum number of powers has been reached");
+    }
+
+    /// <summary>
+    /// Clones this instance of MonsterCard. It's returned as object type, must be casted
+    /// </summary>
+    /// <returns>An object instance being a clone of this card</returns>
+    public override object Clone()
+    {
+        Power?[] pClone = new Power?[MaxPowers];
+
+        return new MonsterCard(Name, Description, Image, AppearingProbability, AttackPoints, HP)
+        {
+            Powers = pClone
+        };
     }
 
     /**
