@@ -258,6 +258,27 @@ public class Player
         return false;
     }
 
+    public Player Clone() {
+        Card?[] handClone = new Card[this.Hand.Length];
+        MonsterCard?[] tableClone = new MonsterCard[this.Table.Length];
+
+        for (int i = 0; i < this.Hand.Length; i++) {
+            if (this.Hand[i] is Card card)
+                handClone[i] = (Card) card.Clone();
+        }
+
+        for (int i = 0; i < this.Table.Length; i++) {
+            if (this.Table[i] is MonsterCard card)
+                handClone[i] = (MonsterCard) card.Clone();
+        }
+
+        return new Player() {
+            Table = tableClone,
+            Hand = handClone,
+            IsPlaying = this.IsPlaying
+        };
+    }
+
     /**
         This methods MUST have the format :
             protected object MethodName(object param);

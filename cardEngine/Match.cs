@@ -221,7 +221,10 @@ public class Match
     /// <returns>A new Match object with the same data</returns>
     public Match Clone()
     {
-        return (Match)this.MemberwiseClone();
+        return new Match(MatchTypes.ComputerVSHuman, 5,5) {
+            player = this.player.Clone(),
+            enemy = this.enemy.Clone()
+        };
     }
 
     /// <summary>
