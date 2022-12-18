@@ -4,7 +4,7 @@ using Match;
 using Cards;
 
 public class VirtualPlayer : Player{
-    public List<string> MovementLog{get;set;}
+    public List<string> MovementLog{get;private set;}
 
     int cardsInHand;
     int cardsInTable;
