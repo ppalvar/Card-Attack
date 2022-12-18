@@ -465,8 +465,8 @@ window.addEventListener("load", () => {
             }
         }
         
-        if (matchType === "ai" && !auto) {
-            postData((`/api/new-turn/${auto}`)).then(val => {console.log(val);
+        if (matchType === "ai") {
+            postData((`/api/new-turn/${auto}`)).then( val => {
                 updateTable(tableSlotsA, val.TableA);
                 updateTable(tableSlotsB, val.TableB);
                 showCards(new Promise((onResolve) => {onResolve(val.Hand)}), false);
