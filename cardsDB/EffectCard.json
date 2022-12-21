@@ -1,0 +1,34 @@
+[
+    {
+        "powerName": "Healing Brew",
+        "powerCode": "@me.IncreaseHP(10);",
+        "name": "Healing Brew",
+        "description": "It heals you by 10 HP but don\u0027t hurts your enemy",
+        "image": "card_5.png",
+        "appearingProbability": 0.4
+    },
+    {
+        "powerName": "Dead Trade",
+        "powerCode": "int i;i = 0;\nwhile (i \u003C 5) {\n    if (@match.enemy.TableAt(i).HP \u003C= 50) {\n        @match.enemy.TableAt(i).Kill(false);\n        \n        @me.IncreaseHP(5);\n        @me.IncreaseAttack(5);\n    }i = i\u002B1;\n}",
+        "name": "Dead Trade",
+        "description": "Kills all monsters from your enemy with HP lower than 50, for each one of them increases 5 HP and 5 Attack to your card.",
+        "image": "card_27.png",
+        "appearingProbability": 0.2
+    },
+    {
+        "powerName": "Tasty soup plate",
+        "powerCode": "int i;i = 0;\nwhile (i \u003C 5) {\n    @match.player.TableAt(i).IncreaseHP(15);\n    @match.player.TableAt(i).IncreaseAttack(15);\n    \n    @match.enemy.TableAt(i).IncreaseHP(-15);\n    @match.enemy.TableAt(i).IncreaseAttack(-15);\ni=i\u002B1;}",
+        "name": "Tasty soup plate",
+        "description": "Lowers the HP and Attack of your enemy\u0027s cards and increases those values in your cards, by 15 points",
+        "image": "card_36.png",
+        "appearingProbability": 0.3
+    },
+    {
+        "powerName": "Life swap",
+        "powerCode": "int a;a = @me.HP;\nint b;b = @target.HP;\n\nif (a == b) {\n    @me.Kill(false);\n    @target.Kill(false);\n}\nelse {\n    @me.IncreaseHP(b - a);\n    @target.IncreaseHP(a - b);\n}",
+        "name": "Life swap",
+        "description": "Swaps your HP and your enemy\u0027s, if they are equal both dies",
+        "image": "card_25.png",
+        "appearingProbability": 0.3
+    }
+]

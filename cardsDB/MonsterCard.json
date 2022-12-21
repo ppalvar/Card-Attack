@@ -1,1 +1,90 @@
-[{"attack":10,"hp":100,"name":"Pollo","description":"pollo","appearingProbability":0},{"attack":10,"hp":100,"name":"Sobrino?","description":"polmgyjffclo","appearingProbability":0},{"attack":0,"hp":100,"name":"Gato","description":"adiknd","appearingProbability":0}]
+[
+    {
+        "attack": 30,
+        "hp": 120,
+        "name": "The Knight",
+        "description": "Don\u0027t underestimate him",
+        "image": "card_12.png",
+        "appearingProbability": 0.3
+    },
+    {
+        "attack": 15,
+        "hp": 30,
+        "name": "Mauseker",
+        "description": "Small but strong enought... ",
+        "image": "card_14.png",
+        "appearingProbability": 0.6
+    },
+    {
+        "attack": 20,
+        "hp": 20,
+        "name": "Stinger",
+        "description": "Don\u0027t be close to the nest, they will hurt you",
+        "image": "card_46.png",
+        "appearingProbability": 0.6
+    },
+    {
+        "attack": 60,
+        "hp": 250,
+        "name": "The One",
+        "description": "Almost a god",
+        "image": "card_42.png",
+        "appearingProbability": 0.1
+    },
+    {
+        "attack": 20,
+        "hp": 90,
+        "name": "Bear Jhonson",
+        "description": "He was on the WWE, beated everyone and feasted on them",
+        "image": "card_35.png",
+        "appearingProbability": 0.4
+    },
+    {
+        "attack": 20,
+        "hp": 100,
+        "name": "Mad Cow",
+        "description": "Get out of her way",
+        "image": "card_31.png",
+        "appearingProbability": 0.5
+    },
+    {
+        "attack": 5,
+        "hp": 20,
+        "name": "Abel",
+        "description": "A depressed Computer Science student",
+        "image": "card_28.png",
+        "appearingProbability": 0.7
+    },
+    {
+        "attack": 15,
+        "hp": 70,
+        "name": "The neighbour",
+        "description": "Always close to you",
+        "image": "card_8.png",
+        "appearingProbability": 0.4
+    },
+    {
+        "attack": 25,
+        "hp": 150,
+        "name": "Yodo",
+        "description": "Any similiraty with some popular franchise character is pure coincidence",
+        "image": "card_16.png",
+        "appearingProbability": 0.3
+    },
+    {
+        "attack": 5,
+        "hp": 50,
+        "name": "Paco",
+        "description": "Is human...",
+        "image": "card_26.png",
+        "appearingProbability": 0.7
+    },
+    {
+        "attack": 30,
+        "hp": 120,
+        "name": "Metal Knight",
+        "description": "An empty armor searching for his soul",
+        "image": "card_2.png",
+        "appearingProbability": 0.3
+    }
+]
