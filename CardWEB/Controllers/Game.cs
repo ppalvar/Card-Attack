@@ -20,14 +20,21 @@ public static class Game
     /// <param name="request">An HttpContext with all the needed data in the body</param>
     /// <returns>A json string with the starting game state</returns>
     public static string NewGame(string type, HttpContext request)
-    {
+    {   
+        /// <summary>
+        /// In this setting, the players will have a deck with 20
+        /// cards in total: 12 Monsters and 8 Effects
+        /// </summary>
+        const int monsters = 8;
+        const int effects  = 12;
+
         if (type == "human")
         {
-            match = new Match(MatchTypes.HumanVSHuman, 5, 5, 10);
+            match = new Match(MatchTypes.HumanVSHuman, 5, 5, monsters, effects);
         }
         else if (type == "ai")
         {
-            match = new Match(MatchTypes.ComputerVSHuman, 5, 5, 10);
+            match = new Match(MatchTypes.ComputerVSHuman, 5, 5, monsters, effects);
         }
 
         string json = CardCreator.GetJSON(request.Request.Body);
@@ -201,6 +208,7 @@ public static class Game
             }
             catch (Exception e)
             {
+                response.errors = e.Message;
                 Console.WriteLine(e.Message);
             }
         }
@@ -237,19 +245,22 @@ public static class Game
 
         bool flag = false;
 
+        string errors = "";
+
         try
         {
             match.Play(cardIndex, match.player.Table[targetIndex]);
             flag = true;
         }
-        catch
+        catch (Exception e)
         {
+            errors = e.Message;
             // do nothing
         }
 
         bool endGame = match.Winner() != null;
 
-        return JsonSerializer.Serialize(new ActionResponse(flag, false, endGame));
+        return JsonSerializer.Serialize(new ActionResponse(flag, false, endGame) {errors = errors});
     }
 
     /// <summary>
@@ -296,6 +307,7 @@ public static class Game
                         }
                         catch (Exception e)
                         {
+                            response.errors = e.Message;
                             Console.WriteLine(e.Message);
                         }
                     }

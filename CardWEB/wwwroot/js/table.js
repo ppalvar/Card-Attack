@@ -228,6 +228,10 @@ window.addEventListener("load", () => {
                         node.remove();
                         select();
                     }
+                    else {
+                        alert(val.errors);
+                        select();
+                    }
     
                     if (val.gameEnds)window.location.replace(`/game-over/${currentPlayer}`); 
                 });
@@ -286,6 +290,10 @@ window.addEventListener("load", () => {
 
                                                     selectedMonster = null;
                                                 }
+                                                else {
+                                                    alert(val.errors);
+                                                    select();
+                                                }
 
                                                 if (val.turnEnds) endTurn(true);
                                             });
@@ -310,6 +318,10 @@ window.addEventListener("load", () => {
     
                                                     selectedMonster = null;
                                                 }
+                                                else {
+                                                    alert(val.errors);
+                                                    select();
+                                                }
     
                                                 if (val.turnEnds) endTurn(true);
                                             });
@@ -324,6 +336,10 @@ window.addEventListener("load", () => {
                                                     select();
                                                     tmp.remove();
                                                 }
+                                                else {
+                                                    alert(val.errors);
+                                                    select();
+                                                }
                                             });
                                         }
                                         else {
@@ -334,6 +350,10 @@ window.addEventListener("load", () => {
                                         
                                     }
                                 }
+                            }
+                            else {
+                                alert(val.errors);
+                                select();
                             }
                         });
                         break;
@@ -350,6 +370,16 @@ window.addEventListener("load", () => {
             const val  = newValues[i];
 
             if (val === null) {
+                try {
+                    slot.firstChild.remove();
+                    slot.lastChild.remove();
+                }
+                catch {
+                    //do nothing
+                }
+            }
+
+            else if (slot.children.length != 0 && val.name !== slot.querySelector(".card-title").innerText) {
                 try {
                     slot.firstChild.remove();
                     slot.lastChild.remove();
@@ -396,6 +426,10 @@ window.addEventListener("load", () => {
     
                                     selectedMonster = null;
                                 }
+                                else {
+                                    alert(_val.errors);
+                                    select();
+                                }
                             });
                         }
                         else {
@@ -417,6 +451,10 @@ window.addEventListener("load", () => {
                                     if (_val.gameEnds) window.location.replace(`/game-over/${currentPlayer}`);
     
                                     selectedMonster = null;
+                                }
+                                else {
+                                    alert(_val.errors);
+                                    select();
                                 }
     
                                 if (_val.turnEnds) endTurn(true);

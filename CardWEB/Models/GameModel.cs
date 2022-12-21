@@ -68,6 +68,8 @@ public class ActionResponse {
 
     public string?[]? MovementLog{get;set;}
 
+    public string errors{get;set;} = "";
+
     public ActionResponse(bool canMove, bool turnEnds, bool gameEnds) {
         this.canMove = canMove;
         this.turnEnds = turnEnds;
