@@ -19,25 +19,22 @@ window.addEventListener("load", () => {
 
         //validate data
         if (!Number.isNaN(aProb) && image !== "" && name !== "") {
-            try {
-                let response = postData("/api/new-effect-card", {
-                    name : name,
-                    description : description,
-                    image : image,
-                    appearingProbability : aProb,
-                    powerName : name,
-                    powerCode : code,
-                });
-            }
-            catch (e) {
-                
-            }
-            finally {
-                window.location.replace("/");
-            }
-        }
-        else {
-            alert("There is some wrong data");
+            postData("/api/new-effect-card", {
+                name : name,
+                description : description,
+                image : image,
+                appearingProbability : aProb,
+                powerName : name,
+                powerCode : code,
+            }).then (val => {
+                if (val.isValid) {
+                    alert("Success!");
+                    window.location.replace("/");
+                }
+                else {
+                    alert(val.errors);
+                }
+            });
         }
     });
 
@@ -54,6 +51,6 @@ window.addEventListener("load", () => {
             referrerPolicy: 'no-referrer', 
             body: JSON.stringify(data) 
         });
-        //return response.json(); // parses JSON response into native JavaScript objects
+        return response.json();
     }
 });
