@@ -33,15 +33,13 @@ public class Power
     /// <param name="match">The state of the game</param>
     private void UsePower(MonsterCard card, MonsterCard target, Match match)
     {
-        Interpreter interpreter = new Interpreter();
-
         MatchState state = new MatchState(card, target, match);
 
         try
         {
             var task = Task.Run(() =>
             {
-                interpreter.Interpret(this.PowerCode, state);
+                Interpreter.Interpret(this.PowerCode, state);
             });
 
 
