@@ -7,7 +7,7 @@
 The language has three data types which are:
 
 ```cs
-bool //Containing True or False values
+bool //Containing true or false values
 int  //Containing 32-bit signed integer values
 string  //Containing unicode values
 ```
@@ -143,7 +143,7 @@ In order to accede to the properties of `me`:
 //methods
 @me.IncreaseHP(x); // Increases the HP of your card by x points (posibly negative for decrease)
 @me.IncreaseAttack(x); // Increases the attack points of your card by x points (posibly negative for decrease)
-@me.Kill(False); // Instantly kills your card
+@me.Kill(false); // Instantly kills your card
 ```
 
 To the `target` property is the same but changing `@me.foo.bar` for `@target.foo.bar`
@@ -163,7 +163,7 @@ To accede the `match`property methods and sub-properties is a bit more complicat
 //this lines aply to the current player
 @match.player.TableAt(i).IncreaseHP(x); // Increases the HP of the card in position i by x points (posibly negative for decrease)
 @match.player.TableAt(i).IncreaseAttack(x); // Increases the attack points of the card in position i by x points (posibly negative for decrease)
-@match.player.TableAt(i).Kill(False); // Instantly kills the monster in the position i
+@match.player.TableAt(i).Kill(false); // Instantly kills the monster in the position i
 @match.player.TableAt(i).HP; // reads the hp of the card in the position i
 @match.player.TableAt(i).AttackPoints; // reads the attack of the card in the position i
 
