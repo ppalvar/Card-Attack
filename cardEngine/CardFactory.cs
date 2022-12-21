@@ -4,6 +4,7 @@ using System;
 using Cards;
 using CardJsonItems;
 using JsonRW;
+using Interpreter;
 
 /// <summary>
 /// Class that allows to read cards from the disk and manage them.
@@ -87,8 +88,15 @@ public class CardFactory
         {
             EffectCard? m = args as EffectCard;
 
+
             if (m != null)
             {
+                Exception? e = Interpreter.TryParse(m.power.PowerCode);
+
+                if (e != null) {
+                    throw e;
+                }
+
                 EffectCardJsonItem tmp = new EffectCardJsonItem(m.Name, m.Description, m.Image, m.AppearingProbability, m.power.Name, m.power.PowerCode);
                 if (EffectReader != null && EffectReader.Content != null)
                 {
