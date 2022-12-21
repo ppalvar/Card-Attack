@@ -1,5 +1,6 @@
 namespace Controllers;
 
+using Models;
 using Cards;
 using CardFactorys;
 using CardJsonItems;
@@ -32,17 +33,29 @@ public static class CardCreator
     /// Creates a new instance of EffectCard and saves it to the disk
     /// </summary>
     /// <param name="request">An HttpContext with all the needed data in the body</param>
-    public static void CreateEffectCard(HttpContext request)
+    public static string CreateEffectCard(HttpContext request)
     {
         string json = GetJSON(request.Request.Body);
         EffectCardJsonItem? effectJSON = JsonSerializer.Deserialize<EffectCardJsonItem>(json);
 
+        CardCreationResponse response = new CardCreationResponse();
+
         if (effectJSON != null)
         {
-            EffectCard monster = new EffectCard(effectJSON);
+            EffectCard effect = new EffectCard(effectJSON);
             CardFactory factory = new CardFactory();
-            factory.CreateCard<EffectCard>(monster);
+
+            try {
+                factory.CreateCard<EffectCard>(effect);
+                response.isValid = true;
+            }
+            catch (Exception e) {
+                response.isValid = false;
+                response.errors  = e.Message;
+            }
         }
+
+        return JsonSerializer.Serialize(response);
     }
 
     /// <summary>

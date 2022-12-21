@@ -86,3 +86,8 @@ public class AttackRequest {
         this.target = target;
     }
 }
+
+public class CardCreationResponse {
+    public bool isValid{get;set;}
+    public string errors{get;set;} = "";
+}
