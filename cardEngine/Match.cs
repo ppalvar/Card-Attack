@@ -121,7 +121,7 @@ public class Match
     /// </summary>
     public void BeginGame()
     {
-        if (!isPlaying)
+        if (!isPlaying && TurnCounter == 0)
         {
             isPlaying = true;
             player.BeginTurn(this);
@@ -133,6 +133,8 @@ public class Match
     /// </summary>
     public void EndTurn()
     {
+        if (!isPlaying) throw new Exception("cannot end a turn when not playing");
+
         Player tmp = this.player;
         this.player = this.enemy;
         this.enemy = tmp;
@@ -149,8 +151,9 @@ public class Match
     /// </summary>
     /// <param name="card">The card you wanna play</param>
     /// <param name="target">The card on wich you wanna equip the power (EffectCard only)</param>
-    public void Play(int card, MonsterCard? target=null)
+    public void Play(int card, MonsterCard? target = null)
     {
+        if (!isPlaying) throw new Exception("cannot play a card when not playing");
         player.Play(card, target);
     }
 
@@ -161,6 +164,8 @@ public class Match
     /// <param name="target">The monster that will be attacked</param>
     public bool Attack(int monsterIndex, MonsterCard target)
     {
+        if (!isPlaying) throw new Exception("cannot attack a card when not playing");
+
         if (TurnCounter < 2) throw new Exception("can't attack yet");
 
         player.Attack(monsterIndex, target);
@@ -179,6 +184,8 @@ public class Match
     /// <param name="target">The actual card, victim of the power</param>
     public bool UsePower(int monsterIndex, int powerIndex, MonsterCard target)
     {
+        if (!isPlaying) throw new Exception("cannot use a power when not playing");
+
         if (monsterIndex >= player.Table.Length || powerIndex >= MonsterCard.MaxPowers)
         {
             return false;
@@ -198,6 +205,8 @@ public class Match
     /// <param name="cardIndex">The index in the hand of the card you wanna drop</param>
     public void DropCard(int cardIndex)
     {
+        if (!isPlaying) throw new Exception("cannot drop a card when not playing");
+
         player.DropCard(cardIndex);
     }
 
@@ -209,8 +218,16 @@ public class Match
     /// <returns></returns>
     public Player? Winner()
     {
-        if (player.HasNoMonsters()) return enemy;
-        if (enemy.HasNoMonsters() ) return player;
+        if (player.HasNoMonsters())
+        {
+            isPlaying = false;
+            return enemy;
+        }
+        if (enemy.HasNoMonsters())
+        {
+            isPlaying = false;
+            return player;
+        }
 
         return null;
     }
@@ -221,7 +238,8 @@ public class Match
     /// <returns>A new Match object with the same data</returns>
     public Match Clone()
     {
-        return new Match(MatchTypes.ComputerVSHuman, 5,5) {
+        return new Match(MatchTypes.ComputerVSHuman, 5, 5)
+        {
             player = this.player.Clone(),
             enemy = this.enemy.Clone()
         };
@@ -233,6 +251,8 @@ public class Match
     /// </summary>
     private bool AutoEndTurn()
     {
+        Winner(); //checks if there is a winner
+
         bool hasEmptySlot = false;
 
         if (player.HasUnusedMonsters()) return false;
