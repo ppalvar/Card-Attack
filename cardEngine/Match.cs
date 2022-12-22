@@ -251,7 +251,6 @@ public class Match
     /// </summary>
     private bool AutoEndTurn()
     {
-        Winner(); //checks if there is a winner
 
         bool hasEmptySlot = false;
 
@@ -267,6 +266,7 @@ public class Match
             if (card != null && card is MonsterCard && hasEmptySlot) return false;
         }
 
+        Winner(); //checks if there is a winner
         EndTurn();
         return true;
     }
