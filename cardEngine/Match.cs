@@ -270,19 +270,4 @@ public class Match
         EndTurn();
         return true;
     }
-
-    /**
-        This methods MUST have the format :
-            protected object MethodName(object param);
-        
-        they are used to modify the game state with code written in 
-        the MLC language, defined in ../interpreterMLC/Interpreter.cs
-    **/
-    #region State modifiers
-    protected object EndTurn(object empty)
-    {
-        EndTurn();
-        return empty;
-    }
-    #endregion
 }

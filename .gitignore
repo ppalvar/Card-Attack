@@ -9,3 +9,9 @@ Fonts
 *.ttf
 *.py
 pdfs
+*.tex
+informe.log
+informe.fls
+informe.aux
+*.fdb_latexmk
+*.synctex.gz
