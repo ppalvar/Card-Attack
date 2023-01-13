@@ -3,18 +3,34 @@ namespace Players;
 using Match;
 using Cards;
 
+/// <summary>
+/// Player that auto-plays when it's turn begins
+/// </summary>
 public class VirtualPlayer : Player{
+    /// <summary>
+    /// The movements that are made by this player
+    /// </summary>
+    /// <value>List of strings describing each movement</value>
     public List<string> MovementLog{get;private set;}
 
     int cardsInHand;
     int cardsInTable;
     
+    /// <summary>
+    /// Create a new instance of virtual player
+    /// </summary>
+    /// <param name="cardsInHand">The number of cards this player will have in the hand</param>
+    /// <param name="cardsInTable">The number of cards this player will have in the table</param>
     public VirtualPlayer(int cardsInHand, int cardsInTable) : base(cardsInHand, cardsInTable){
         this.cardsInHand = cardsInHand;
         this.cardsInTable = cardsInTable;
         MovementLog = new List<string>();
     }
 
+    /// <summary>
+    /// Begins the turn, makes movements automatically and finally ends the turn
+    /// </summary>
+    /// <param name="match">The match where is currently playing</param>
     public override void BeginTurn(Match? match) {
         if (match != null) {
             base.BeginTurn(match);
@@ -26,7 +42,16 @@ public class VirtualPlayer : Player{
         }
     }
 
-    public bool MakeMovement(Match match){
+    /// <summary>
+    /// Decides and makes movements in a step-by-step approach:
+    /// First summons max 3 monsters
+    /// Then, randomly adds powers to the monsters in the table (max 3)
+    /// Then, uses randomly 0 to 3 powers
+    /// Finally attacks following a greedy strategy: always attack the weakest card
+    /// </summary>
+    /// <param name="match">The match where is currently playing</param>
+    /// <returns>True if the turn ends, false otherwise</returns>
+    private bool MakeMovement(Match match){
         //step #1: summon monsters
 
         bool mustDrop = true;
