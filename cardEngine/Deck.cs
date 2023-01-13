@@ -14,11 +14,17 @@ public class Deck
     /// </summary>
     private Card[] DeckCards { get; set; }
 
+    /// <summary>
+    /// Checks if the deck is empty or not
+    /// </summary>
     public bool HasCards
     {
         get { return DeckCards.Length != 0; }
     }
 
+    /// <summary>
+    /// Checks if there is some monsters left
+    /// </summary>
     public bool HasMonsters
     {
         get

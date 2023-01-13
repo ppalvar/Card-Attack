@@ -108,10 +108,6 @@ public class MonsterCard : Card
             {
                 Powers[i] = power; return;
             }
-            else
-            {
-                // do nothing
-            }
         }
 
         throw new Exception("the maximum number of powers has been reached");
